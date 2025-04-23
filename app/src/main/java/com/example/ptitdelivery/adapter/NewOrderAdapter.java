@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
 import com.example.ptitdelivery.fragments.OngoingOrderFragment;
@@ -89,6 +90,11 @@ public class NewOrderAdapter extends BaseAdapter {
         // Store info
         holder.tvStoreName.setText(order.getStore().getName());
         holder.tvStoreAddress.setText(order.getStore().getAddress().getFull_address());
+        Glide.with(context)
+                .load(order.getStore().getAvatar().getUrl()  )
+                .placeholder(R.drawable.avatar)
+                .error(R.drawable.avatar)
+                .into(holder.imgStoreAvatar);
 
         // User Info
         String userInfo = order.getUser().getName() + " - " + order.getUser().getPhonenumber();

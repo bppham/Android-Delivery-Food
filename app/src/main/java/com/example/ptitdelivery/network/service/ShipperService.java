@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
 
-public interface ShipperApi {
+public interface ShipperService {
     @GET("shipper/{id}")
-    Call<Shipper> getShipper(@Path("id") String id, @Header("Authorization") String token);
+    Call<Shipper> getShipper(@Path("id") String id);
 }

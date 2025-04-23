@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
 import com.example.ptitdelivery.model.Order;
@@ -70,6 +71,11 @@ public class HistoryOrdersAdapter extends BaseAdapter {
         // Store info
         holder.tvStoreName.setText(order.getStore().getName());
         holder.tvStoreAddress.setText(order.getStore().getAddress().getFull_address());
+        Glide.with(context)
+                .load(order.getStore().getAvatar().getUrl()  )
+                .placeholder(R.drawable.avatar)
+                .error(R.drawable.avatar)
+                .into(holder.ivStoreAvatar);
 
         // Order info
         holder.tvOrderId.setText(order.getId());

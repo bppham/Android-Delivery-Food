@@ -45,5 +45,24 @@ public class ConvertString {
         return displayStatus;
     }
 
+    public static String convertGender(String gender){
+        String displayMethod;
+        switch (gender) {
+            case "male":
+                displayMethod = "Nam";
+                break;
+            case "female":
+                displayMethod = "Nữ";
+                break;
+            case "Other":
+                displayMethod = "Khác";
+                break;
+            default:
+                displayMethod = "Không xác định";
+                break;
+        }
+        return displayMethod;
+    }
+
 
 }
