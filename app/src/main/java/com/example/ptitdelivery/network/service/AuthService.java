@@ -7,7 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface AuthApi {
+public interface AuthService {
     @POST("auth/login/shipper")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
 }

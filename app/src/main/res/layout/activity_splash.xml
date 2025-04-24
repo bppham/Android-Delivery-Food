@@ -5,15 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SplashActivity"
-    android:background="#fc6011">
+    android:background="@color/white"
+    tools:context=".activities.SplashActivity">
 
     <TextView
         android:id="@+id/textViewLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FOOD DELIVERY"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/main_color"
         android:textSize="45sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="For PTIT_FOOD"
+        android:text="Đồ án nhóm 8"
         android:textColor="#000000"
         android:textSize="16sp"
         android:textStyle="italic"

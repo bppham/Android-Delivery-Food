@@ -5,26 +5,28 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.network.ApiClient;
-import com.example.ptitdelivery.network.service.AuthApi;
-import com.example.ptitdelivery.model.Login.LoginRequest;
-import com.example.ptitdelivery.model.Login.LoginResponse;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.ptitdelivery.network.service.AuthService;
+import com.example.ptitdelivery.repositories.LoginRepository;
+import com.example.ptitdelivery.viewmodel.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private AuthApi authApi;
-    Button btnLogin;
-    EditText edtLoginEmail, edtLoginPassword;
+    private AuthService authApi;
+    private Button btnLogin;
+    private EditText edtLoginEmail, edtLoginPassword;
+    private TextView tvRegister, tvForgotPassword;
+    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,51 +34,61 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        authApi = ApiClient.getClient().create(AuthApi.class);
+        authApi = ApiClient.getClient().create(AuthService.class);
+        LoginRepository repository = new LoginRepository(authApi);
         btnLogin = findViewById(R.id.btnLogin);
         edtLoginEmail = findViewById(R.id.edtLoginEmail);
         edtLoginPassword = findViewById(R.id.edtLoginPassword);
+        tvRegister = findViewById(R.id.tv_register);
+        tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
-        btnLogin.setOnClickListener(view -> {
-            String email = edtLoginEmail.getText().toString().trim();
-            String password = edtLoginPassword.getText().toString().trim();
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                return;
+        loginViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) new LoginViewModel(repository);
             }
-            login(email, password);
+        }).get(LoginViewModel.class);
+
+        observeLogin();
+        action();
+    }
+
+    private void observeLogin() {
+        loginViewModel.getLoginResponse().observe(this, loginResponse -> {
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("token", "Bearer " + loginResponse.getToken());
+            editor.putString("id", loginResponse.get_id());
+            editor.apply();
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("TOKEN", loginResponse.getToken());
+            startActivity(intent);
+            finish();
         });
-    };
 
-    private void login(String email, String password) {
-        LoginRequest request = new LoginRequest(email, password);
-        authApi.login(request).enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                if (response.isSuccessful()) {
-                    LoginResponse loginResponse = response.body();
-                    // Lưu token & id vào SharedPreferences
-                    SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("token", "Bearer " + loginResponse.getToken());
-                    editor.putString("id", loginResponse.get_id()); // Lưu id của shipper
-                    editor.apply();
-                    // Chuyển hướng đến MainActivity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("TOKEN", loginResponse.getToken());
-                    startActivity(intent);
-                    finish(); // Đóng LoginActivity để không quay lại được nữa
-                } else {
-                    Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        loginViewModel.getLoginError().observe(this, error -> {
+            Toast.makeText(LoginActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
         });
     }
 
+    public void action() {
+        btnLogin.setOnClickListener(view -> {
+            String email = edtLoginEmail.getText().toString();
+            String password = edtLoginPassword.getText().toString();
+            loginViewModel.login(email, password);
+        });
 
-}
+        tvRegister.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
+
+        tvForgotPassword.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
+    }
+
+};

@@ -1,21 +1,18 @@
 package com.example.ptitdelivery.repositories;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.ptitdelivery.model.Login.LoginRequest;
 import com.example.ptitdelivery.model.Login.LoginResponse;
-import com.example.ptitdelivery.network.ApiClient;
 import com.example.ptitdelivery.network.service.AuthService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AuthRepository {
+public class LoginRepository {
     private final AuthService authService;
 
-    public AuthRepository(String token) {
-        this.authService = ApiClient.getClient(token).create(AuthService.class);
+    public LoginRepository(AuthService authService) {
+        this.authService = authService;
     }
 
     public void login(String email, String password, LoginCallback callback){
