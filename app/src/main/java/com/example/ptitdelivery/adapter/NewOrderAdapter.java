@@ -1,33 +1,27 @@
 package com.example.ptitdelivery.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
 import com.example.ptitdelivery.fragments.OngoingOrderFragment;
 import com.example.ptitdelivery.model.Item;
-import com.example.ptitdelivery.model.Order;
+import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.utils.DialogHelper;
 import com.example.ptitdelivery.viewmodel.NewOrdersViewModel;
 

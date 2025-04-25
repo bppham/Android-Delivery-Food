@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
-import com.example.ptitdelivery.model.Order;
+import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.utils.DialogHelper;
 import com.example.ptitdelivery.viewmodel.OngoingOrderViewModel;

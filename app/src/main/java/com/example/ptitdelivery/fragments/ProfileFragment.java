@@ -22,15 +22,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.LoginActivity;
-import com.example.ptitdelivery.network.ApiClient;
 import com.example.ptitdelivery.network.service.ShipperService;
-import com.example.ptitdelivery.model.Shipper;
 import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.viewmodel.ProfileViewModel;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "Profile Fragment";

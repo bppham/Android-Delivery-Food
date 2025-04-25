@@ -2,7 +2,7 @@ package com.example.ptitdelivery.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.ptitdelivery.model.Shipper;
+import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.network.ApiClient;
 import com.example.ptitdelivery.network.service.ShipperService;
 

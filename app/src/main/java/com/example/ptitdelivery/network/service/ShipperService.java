@@ -1,10 +1,9 @@
 package com.example.ptitdelivery.network.service;
 
-import com.example.ptitdelivery.model.Shipper;
+import com.example.ptitdelivery.model.Shipper.Shipper;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Path;
 
 public interface ShipperService {

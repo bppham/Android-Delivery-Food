@@ -1,8 +1,8 @@
 package com.example.ptitdelivery.network.service;
 
 import com.example.ptitdelivery.model.DeliveredOrderResponse;
-import com.example.ptitdelivery.model.OrderResponse;
-import com.example.ptitdelivery.model.SingleOrderResponse;
+import com.example.ptitdelivery.model.Order.OrderResponse;
+import com.example.ptitdelivery.model.Order.SingleOrderResponse;
 
 import java.util.Map;
 

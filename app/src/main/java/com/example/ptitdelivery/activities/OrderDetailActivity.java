@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.adapter.ToppingAdapter;
 import com.example.ptitdelivery.model.Item;
-import com.example.ptitdelivery.model.Order;
+import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.model.Topping;
 
 import java.text.NumberFormat;

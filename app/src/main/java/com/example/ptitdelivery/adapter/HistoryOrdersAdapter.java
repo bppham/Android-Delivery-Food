@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
-import com.example.ptitdelivery.model.Order;
+import com.example.ptitdelivery.model.Order.Order;
 
 import java.util.List;
 

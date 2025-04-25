@@ -1,18 +1,15 @@
-package com.example.ptitdelivery.model;
+package com.example.ptitdelivery.model.Shipper;
 
+import com.example.ptitdelivery.model.Vehicle;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Shipper implements Serializable {
-    @SerializedName("_id")
-    private String id;
+public class ShipperRegisterRequest implements Serializable {
     @SerializedName("name")
     private String name;
     @SerializedName("email")
     private String email;
-    @SerializedName("avatar")
-    private Avatar avatar;
     @SerializedName("phonenumber")
     private String phonenumber;
     @SerializedName("password")
@@ -23,12 +20,19 @@ public class Shipper implements Serializable {
     private String status;
     @SerializedName("vehicle")
     private Vehicle vehicle;
-    @SerializedName("refreshToken")
-    private String refreshToken;
 
+    public ShipperRegisterRequest(String name, String email, String phonenumber, String password, String gender, String status, Vehicle vehicle) {
+        this.name = name;
+        this.email = email;
+        this.phonenumber = phonenumber;
+        this.password = password;
+        this.gender = gender;
+        this.status = status;
+        this.vehicle = vehicle;
+    }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -49,18 +53,6 @@ public class Shipper implements Serializable {
 
     public String getStatus() {
         return status;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Avatar getAvatar() {
-        return avatar;
     }
 
     public Vehicle getVehicle() {

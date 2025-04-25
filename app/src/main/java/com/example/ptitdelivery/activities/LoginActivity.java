@@ -17,12 +17,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.network.ApiClient;
 import com.example.ptitdelivery.network.service.AuthService;
-import com.example.ptitdelivery.repositories.LoginRepository;
+import com.example.ptitdelivery.repositories.AuthRepository;
 import com.example.ptitdelivery.viewmodel.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private AuthService authApi;
     private Button btnLogin;
     private EditText edtLoginEmail, edtLoginPassword;
     private TextView tvRegister, tvForgotPassword;
@@ -34,8 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        authApi = ApiClient.getClient().create(AuthService.class);
-        LoginRepository repository = new LoginRepository(authApi);
+        AuthRepository repository = new AuthRepository();
         btnLogin = findViewById(R.id.btnLogin);
         edtLoginEmail = findViewById(R.id.edtLoginEmail);
         edtLoginPassword = findViewById(R.id.edtLoginPassword);

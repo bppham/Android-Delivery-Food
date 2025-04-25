@@ -5,12 +5,11 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ptitdelivery.model.DeliveredOrderResponse;
-import com.example.ptitdelivery.model.Order;
-import com.example.ptitdelivery.model.OrderResponse;
-import com.example.ptitdelivery.model.SingleOrderResponse;
+import com.example.ptitdelivery.model.Order.Order;
+import com.example.ptitdelivery.model.Order.OrderResponse;
+import com.example.ptitdelivery.model.Order.SingleOrderResponse;
 import com.example.ptitdelivery.network.ApiClient;
 import com.example.ptitdelivery.network.service.OrderService;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;

@@ -5,19 +5,19 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ptitdelivery.model.Login.LoginResponse;
-import com.example.ptitdelivery.repositories.LoginRepository;
+import com.example.ptitdelivery.repositories.AuthRepository;
 
 public class LoginViewModel extends ViewModel {
-    private final LoginRepository repository;
+    private final AuthRepository repository;
     private final MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
     private final MutableLiveData<String> loginError = new MutableLiveData<>();
 
-    public LoginViewModel(LoginRepository repository) {
+    public LoginViewModel(AuthRepository repository) {
         this.repository = repository;
     }
 
     public void login(String email, String password) {
-        repository.login(email, password, new LoginRepository.LoginCallback() {
+        repository.login(email, password, new AuthRepository.LoginCallback() {
             @Override
             public void onSuccess(LoginResponse response) {
                 loginResponse.postValue(response);

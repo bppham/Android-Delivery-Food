@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ptitdelivery.model.Order;
+import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.repositories.OrderRepository;
 
 public class OngoingOrderViewModel extends ViewModel {

@@ -1,5 +1,9 @@
-package com.example.ptitdelivery.model;
+package com.example.ptitdelivery.model.Order;
 
+import com.example.ptitdelivery.model.Item;
+import com.example.ptitdelivery.model.Location;
+import com.example.ptitdelivery.model.Store;
+import com.example.ptitdelivery.model.User;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package com.example.ptitdelivery.model;
+package com.example.ptitdelivery.model.Order;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.example.ptitdelivery.model;
 
+import com.example.ptitdelivery.model.Order.Order;
+
 import java.io.Serializable;
 import java.util.List;
 

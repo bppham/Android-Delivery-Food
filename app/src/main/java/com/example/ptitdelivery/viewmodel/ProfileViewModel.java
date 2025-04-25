@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.ptitdelivery.model.Shipper;
+import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.repositories.ShipperRepository;
 
 public class ProfileViewModel extends ViewModel {
