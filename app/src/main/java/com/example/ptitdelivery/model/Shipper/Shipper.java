@@ -68,4 +68,44 @@ public class Shipper implements Serializable {
     public Vehicle getVehicle() {
         return vehicle;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

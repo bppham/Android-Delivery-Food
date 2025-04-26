@@ -9,6 +9,7 @@ import com.example.ptitdelivery.repositories.ShipperRepository;
 
 public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<Shipper> shipper = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isUpdateSuccess = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private ShipperRepository repository;
@@ -18,8 +19,14 @@ public class ProfileViewModel extends ViewModel {
     public void getShipper(String id) {
         repository.getShipper(id, shipper, isLoading, errorMessage);
     }
+    public void updateShipper(Shipper shipperToUpdate) {
+        repository.updateShipper(shipperToUpdate, shipper, isLoading, errorMessage);
+    }
     public LiveData<Shipper> getShipperLiveData() {
         return shipper;
+    }
+    public LiveData<Boolean> getIsUpdateSuccess() {
+        return isUpdateSuccess;
     }
     public LiveData<String> getErrorMessageLiveData() {
         return errorMessage;

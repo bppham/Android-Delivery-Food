@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.LoginActivity;
+import com.example.ptitdelivery.activities.UpdatePersonalInfo;
+import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.network.service.ShipperService;
 import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.viewmodel.ProfileViewModel;
@@ -33,7 +36,9 @@ public class ProfileFragment extends Fragment {
     private ImageView ivProfileAvatar;
     private TextView tvEmail, tvName, tvGender, tvPhoneNumber, tvVehicleName, tvVehicleNumber;
     private Button btnLogout;
+    private LinearLayout layoutUpdateProfile;
     private ShipperService shipperApi;
+    private Shipper shipper;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +53,7 @@ public class ProfileFragment extends Fragment {
         tvGender = view.findViewById(R.id.tv_profile_gender);
         tvPhoneNumber = view.findViewById(R.id.tv_profile_phoneNumber);
         btnLogout = view.findViewById(R.id.btn_profile_logout);
+        layoutUpdateProfile = view.findViewById(R.id.layout_update_profile_information);
 
         // Lấy ID & Token từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -65,6 +71,7 @@ public class ProfileFragment extends Fragment {
         viewModel.getShipper(id);
 
         observeViewModel();
+        action();
         logout(sharedPreferences);
         return view;
     }
@@ -76,6 +83,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         viewModel.getShipperLiveData().observe(getViewLifecycleOwner(), shipper -> {
+            this.shipper = shipper;
             if (shipper != null) {
                 Log.d(TAG, "Đã lấy được đơn hàng: " + shipper.getId());
                 tvEmail.setText(shipper.getEmail());
@@ -102,6 +110,15 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        String id = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).getString("id", null);
+        if (id != null) {
+            viewModel.getShipper(id);  // Lấy lại thông tin shipper mới
+        }
+    }
+
 
     private void logout(SharedPreferences sharedPreferences) {
         btnLogout.setOnClickListener(v -> {
@@ -112,6 +129,14 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+        });
+    }
+
+    private void action() {
+        layoutUpdateProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), UpdatePersonalInfo.class);
+            intent.putExtra("shipper", shipper);
+            startActivity(intent);
         });
     }
 
