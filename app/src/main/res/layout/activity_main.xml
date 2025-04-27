@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:paddingTop="16dp">
 
     <!-- AppBarLayout chứa Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
@@ -19,8 +20,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:backgroundTint="#fc6011"
+            android:background="@drawable/background_header"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <!-- Logo App -->
@@ -39,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:text="Trang chủ"
                 android:textSize="18sp"
-                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textColor="@color/main_color"
                 android:layout_gravity="center"/>
 
             <!-- Avatar User -->
@@ -53,6 +54,13 @@
                 android:scaleType="fitCenter"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/app_bar"
+        android:background="#D9D9D9"/>
 
     <!-- ViewPager -->
     <androidx.viewpager.widget.ViewPager
@@ -68,6 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:itemIconTint="@drawable/bottom_nav_item_color"
+        app:itemTextColor="@drawable/bottom_nav_item_color"
         app:menu="@menu/bottom_nav_menu" />
 
 </RelativeLayout>

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
+import com.example.ptitdelivery.activities.ChangePasswordActivity;
 import com.example.ptitdelivery.activities.LoginActivity;
 import com.example.ptitdelivery.activities.UpdatePersonalInfo;
 import com.example.ptitdelivery.model.Shipper.Shipper;
@@ -36,7 +37,7 @@ public class ProfileFragment extends Fragment {
     private ImageView ivProfileAvatar;
     private TextView tvEmail, tvName, tvGender, tvPhoneNumber, tvVehicleName, tvVehicleNumber;
     private Button btnLogout;
-    private LinearLayout layoutUpdateProfile;
+    private LinearLayout layoutUpdateProfile, layoutUpdatePassword;
     private ShipperService shipperApi;
     private Shipper shipper;
     @Nullable
@@ -54,6 +55,7 @@ public class ProfileFragment extends Fragment {
         tvPhoneNumber = view.findViewById(R.id.tv_profile_phoneNumber);
         btnLogout = view.findViewById(R.id.btn_profile_logout);
         layoutUpdateProfile = view.findViewById(R.id.layout_update_profile_information);
+        layoutUpdatePassword = view.findViewById(R.id.layout_update_profile_password);
 
         // Lấy ID & Token từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -136,6 +138,10 @@ public class ProfileFragment extends Fragment {
         layoutUpdateProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), UpdatePersonalInfo.class);
             intent.putExtra("shipper", shipper);
+            startActivity(intent);
+        });
+        layoutUpdatePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
         });
     }

@@ -2,6 +2,9 @@ package com.example.ptitdelivery.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.ptitdelivery.model.ChangePassword.ChangePasswordResponse;
+import com.example.ptitdelivery.model.ChangePassword.ResetPasswordRequest;
+import com.example.ptitdelivery.model.ChangePassword.VerifyOldPasswordRequest;
 import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.network.ApiClient;
 import com.example.ptitdelivery.network.service.ShipperService;
@@ -59,6 +62,53 @@ public class ShipperRepository {
             }
         });
     }
+    public void verifyOldPassword(VerifyOldPasswordRequest request,
+                                  MutableLiveData<ChangePasswordResponse> responseLiveData,
+                                  MutableLiveData<Boolean> isLoading,
+                                  MutableLiveData<String> errorMessage) {
+        isLoading.setValue(true);
+        shipperService.verifyOldPassword(request).enqueue(new Callback<ChangePasswordResponse>() {
+            @Override
+            public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
+                isLoading.setValue(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    responseLiveData.setValue(response.body());
+                } else {
+                    errorMessage.setValue("Mật khẩu cũ không đúng");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
+                isLoading.setValue(false);
+                errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
+            }
+        });
+    }
+    public void resetPassword(ResetPasswordRequest request,
+                              MutableLiveData<ChangePasswordResponse> responseLiveData,
+                              MutableLiveData<Boolean> isLoading,
+                              MutableLiveData<String> errorMessage) {
+        isLoading.setValue(true);
+        shipperService.resetPassword(request).enqueue(new Callback<ChangePasswordResponse>() {
+            @Override
+            public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
+                isLoading.setValue(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    responseLiveData.setValue(response.body());
+                } else {
+                    errorMessage.setValue("Không thể đổi mật khẩu");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
+                isLoading.setValue(false);
+                errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
+            }
+        });
+    }
+
 
 
 }
