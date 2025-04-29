@@ -51,4 +51,8 @@ dependencies {
     // Glide
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
+    implementation ("io.socket:socket.io-client:2.0.1")
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 }

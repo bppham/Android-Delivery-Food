@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
+import com.example.ptitdelivery.activities.SeeRouteActivity;
 import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.utils.DialogHelper;
@@ -76,6 +77,7 @@ public class OngoingOrderFragment extends Fragment {
         btnNextStep2 = view.findViewById(R.id.btnNextStep2);
         btnCallUser = view.findViewById(R.id.btnCallUser);
         btnDetailOrderStep2 = view.findViewById(R.id.btnDetailOrderStep2);
+        btnShowDirectionStep2 = view.findViewById(R.id.btnShowDirectionStep2);
         // Step 3
         cvStep3 = view.findViewById(R.id.cv_ongoing_order_step_3);
         tvOrderId = view.findViewById(R.id.tv_ongoing_order_id);
@@ -203,6 +205,12 @@ public class OngoingOrderFragment extends Fragment {
         });
         btnDetailOrderStep2.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+            intent.putExtra("order", order);
+            startActivity(intent);
+        });
+
+        btnShowDirectionStep2.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), SeeRouteActivity.class);
             intent.putExtra("order", order);
             startActivity(intent);
         });

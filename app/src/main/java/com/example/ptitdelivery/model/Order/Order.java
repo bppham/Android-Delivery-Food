@@ -2,6 +2,7 @@ package com.example.ptitdelivery.model.Order;
 
 import com.example.ptitdelivery.model.Item;
 import com.example.ptitdelivery.model.Location;
+import com.example.ptitdelivery.model.ShipLocation;
 import com.example.ptitdelivery.model.Store;
 import com.example.ptitdelivery.model.User;
 import com.google.gson.annotations.SerializedName;
@@ -20,7 +21,7 @@ public class Order implements Serializable {
     private String createdAt;
     private String updatedAt;
     private String shipper;
-    private Location shipLocation;
+    private ShipLocation shipLocation;
 
     public String getId() {
         return id;
@@ -94,11 +95,11 @@ public class Order implements Serializable {
         this.shipper = shipper;
     }
 
-    public Location getShipLocation() {
+    public ShipLocation getShipLocation() {
         return shipLocation;
     }
 
-    public void setShipLocation(Location shipLocation) {
+    public void setShipLocation(ShipLocation shipLocation) {
         this.shipLocation = shipLocation;
     }
 }
