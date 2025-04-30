@@ -9,7 +9,4 @@ public class ResetPasswordRequest implements Serializable {
         this.newPassword = newPassword;
     }
 
-    public String getNewPassword() {
-        return newPassword;
-    }
 }

@@ -2,8 +2,6 @@ package com.example.ptitdelivery.activities;
 
 import static android.content.ContentValues.TAG;
 
-import static java.security.AccessController.getContext;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
@@ -14,17 +12,14 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONArray;
@@ -38,11 +33,8 @@ import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 
-import com.example.ptitdelivery.model.ApiResponse;
 import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.network.SocketManager;
-import com.example.ptitdelivery.utils.ConvertString;
-import com.example.ptitdelivery.utils.Resource;
 import com.example.ptitdelivery.viewmodel.OrderViewModel;
 import com.example.ptitdelivery.viewmodel.RoutingOrderViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -60,33 +52,36 @@ import java.util.List;
 import com.example.ptitdelivery.R;
 import com.google.android.gms.location.LocationServices;
 
-public class SeeRouteActivity extends AppCompatActivity implements MapEventsReceiver{
+public class SeeRouteToCustomerActivity extends AppCompatActivity implements MapEventsReceiver{
     private MapView mapView;
     private FusedLocationProviderClient fusedLocationClient;
     private OrderViewModel viewModel;
     private RoutingOrderViewModel routingViewModel;
     private String orderId;
     private Order order;
-    private Marker customerMarker, storeMarker, shipperMarker;
+    private Marker customerMarker, shipperMarker;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
-    private Double storeLatitude, storeLongitude, customerLatitude, customerLongitude;
+    private Double customerLatitude, customerLongitude;
     private Polyline storePolyline;
     private Polyline customerPolyline;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_see_route);
+        setContentView(R.layout.activity_see_route_to_customer);
 
         mapView = findViewById(R.id.mapView);
+        toolbar = findViewById(R.id.toolbar_see_route_to_customer);
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
 
         order = (Order) getIntent().getSerializableExtra("order");
         orderId = order.getId();
-        Log.d("SeeRouteActivity", "Ship location: " + order.getShipLocation().getCoordinates()[1] + " " + order.getShipLocation().getCoordinates()[0]);
-        Log.d("SeeRouteActivity", "Store location: " + order.getStore().getAddress().getLat() + " " + order.getStore().getAddress().getLon());
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
@@ -117,7 +112,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
             requestLocationPermission();
         }
 
-//        setupOrderDetail();
         observeViewModel();
 
         SocketManager.joinOrder(orderId);
@@ -138,8 +132,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
                     double longitude = location.getLongitude();
 
                     addShipperMarker(latitude, longitude);
-
-                    updateRouteToStore(latitude, longitude);
                     updateRouteToCustomer(latitude, longitude);
 
                     try {
@@ -184,7 +176,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
         mapView.invalidate();
         return true;
     }
-
     private boolean checkLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -192,47 +183,17 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
             return true;
         }
     }
-
     private void requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
             Toast.makeText(this, "Please allow location access to continue", Toast.LENGTH_SHORT).show();
         }
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
     }
-
-//    private void setupOrderDetail() {
-//        viewModel.getOrderDetailResponse().observe(this, new Observer<Resource<ApiResponse<Order>>>() {
-//            @Override
-//            public void onChanged(Resource<ApiResponse<Order>> resource) {
-//                switch (resource.getStatus()) {
-//                    case LOADING:
-//                        break;
-//                    case SUCCESS:
-//                        addCustomerMarker(order.getShipLocation().getCoordinates()[1], order.getShipLocation().getCoordinates()[0]);
-//                        addStoreMarker(order.getStore().getAddress().getLat(), order.getStore().getAddress().getLon());
-//
-//                        break;
-//                    case ERROR:
-//                        break;
-//                }
-//            }
-//        });
-//        viewModel.getOrderDetail(orderId);
-//    }
-
     private void observeViewModel() {
-        routingViewModel.getIsLoadingLiveData().observe(this, isLoading -> {
-            if (isLoading != null) {
-//                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-            }
-        });
-
         routingViewModel.getDetailOrderLiveData().observe(this, order -> {
             if (order != null) {
                 Log.d("SeeRouteActivity", "Đã lấy được đơn hàng: " + order.getId());
                 addCustomerMarker(order.getShipLocation().getCoordinates()[1], order.getShipLocation().getCoordinates()[0]);
-                addStoreMarker(order.getStore().getAddress().getLat(), order.getStore().getAddress().getLon());
-
             } else {
                 // Không có đơn hàng
                 Log.d("SeeRouteActivity", "Error: Không có đơn hàng");
@@ -245,8 +206,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
     private Drawable resizeDrawable(int drawableId, int width, int height) {
         Drawable image = getResources().getDrawable(drawableId);
@@ -269,23 +228,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
             customerMarker.setDraggable(false);
             mapView.getOverlays().add(customerMarker);
             moveMapToLocation(latitude, longitude);
-        }
-
-        mapView.invalidate();
-    }
-    private void addStoreMarker(double latitude, double longitude) {
-        GeoPoint fixedPoint = new GeoPoint(latitude, longitude);
-        storeLatitude = latitude;
-        storeLongitude = longitude;
-
-        if (storeMarker == null) {
-            storeMarker = new Marker(mapView);
-            storeMarker.setPosition(fixedPoint);
-            storeMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            storeMarker.setTitle("Cửa hàng");
-            storeMarker.setIcon(resizeDrawable(R.drawable.ic_store_marker, 24, 24));
-            storeMarker.setDraggable(false);
-            mapView.getOverlays().add(storeMarker);
         }
 
         mapView.invalidate();
@@ -321,7 +263,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         fusedLocationClient.getLastLocation()
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
@@ -333,75 +274,6 @@ public class SeeRouteActivity extends AppCompatActivity implements MapEventsRece
                         addShipperMarker(latitude, longitude);
                     }
                 });
-    }
-    private void updateRouteToStore(double shipperLat, double shipperLon) {
-        if (storeLatitude == null || storeLongitude == null) return;
-
-        String url = "https://router.project-osrm.org/route/v1/driving/" +
-                shipperLon + "," + shipperLat + ";" + storeLongitude + "," + storeLatitude +
-                "?overview=full&geometries=geojson";
-
-        new Thread(() -> {
-            HttpURLConnection connection = null;
-            try {
-                URL apiUrl = new URL(url);
-                connection = (HttpURLConnection) apiUrl.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(5000);
-                connection.setReadTimeout(5000);
-                connection.setRequestProperty("User-Agent", "MyApp/1.0");
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    InputStream inputStream = connection.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                    StringBuilder responseBuilder = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        responseBuilder.append(line);
-                    }
-                    reader.close();
-
-                    JSONObject json = new JSONObject(responseBuilder.toString());
-                    JSONArray routes = json.getJSONArray("routes");
-
-                    if (routes.length() > 0) {
-                        JSONObject geometry = routes.getJSONObject(0).getJSONObject("geometry");
-                        JSONArray coordinates = geometry.getJSONArray("coordinates");
-
-                        List<GeoPoint> geoPoints = new ArrayList<>();
-                        for (int i = 0; i < coordinates.length(); i++) {
-                            JSONArray coord = coordinates.getJSONArray(i);
-                            double lon = coord.getDouble(0);
-                            double lat = coord.getDouble(1);
-                            geoPoints.add(new GeoPoint(lat, lon));
-                        }
-
-                        runOnUiThread(() -> {
-                            if (storePolyline != null) {
-                                mapView.getOverlays().remove(storePolyline);
-                            }
-
-                            storePolyline = new Polyline();
-                            storePolyline.setPoints(geoPoints);
-                            storePolyline.setColor(Color.BLUE);
-                            storePolyline.setWidth(5f);
-                            mapView.getOverlays().add(storePolyline);
-                            mapView.invalidate();
-                        });
-                    }
-
-                } else {
-                    Log.e("ROUTE_ERROR", "OSRM server returned code: " + responseCode);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(this, "Lỗi khi lấy route từ OSRM", Toast.LENGTH_SHORT).show());
-            } finally {
-                if (connection != null) connection.disconnect();
-            }
-        }).start();
     }
     private void updateRouteToCustomer(double shipperLat, double shipperLon) {
         if (customerLatitude == null || customerLongitude == null) return;

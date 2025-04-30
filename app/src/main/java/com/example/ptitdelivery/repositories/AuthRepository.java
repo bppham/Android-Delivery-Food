@@ -2,6 +2,10 @@ package com.example.ptitdelivery.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.ptitdelivery.model.CheckOTP.CheckOTPRequest;
+import com.example.ptitdelivery.model.CheckOTP.CheckOTPResponse;
+import com.example.ptitdelivery.model.ForgetPassword.ForgetPasswordRequest;
+import com.example.ptitdelivery.model.ForgetPassword.ForgetPasswordResponse;
 import com.example.ptitdelivery.model.Login.LoginRequest;
 import com.example.ptitdelivery.model.Login.LoginResponse;
 import com.example.ptitdelivery.model.Shipper.ShipperRegisterRequest;
@@ -45,6 +49,14 @@ public class AuthRepository {
 
     public void registerShipper(ShipperRegisterRequest request, Callback<ShipperRegisterResponse> callback) {
         authService.register(request).enqueue(callback);
+    }
+
+    public void forgetPassword(ForgetPasswordRequest request, Callback<ForgetPasswordResponse> callback) {
+        authService.forgetPassword(request).enqueue(callback);
+    }
+
+    public void checkOTP(CheckOTPRequest request, Callback<CheckOTPResponse> callback) {
+        authService.checkOTP(request).enqueue(callback);
     }
 
 }

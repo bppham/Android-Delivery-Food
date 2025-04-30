@@ -1,5 +1,6 @@
 package com.example.ptitdelivery.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -16,6 +17,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ptitdelivery.R;
+import com.example.ptitdelivery.model.CheckOTP.CheckOTPRequest;
+import com.example.ptitdelivery.utils.DialogHelper;
+import com.example.ptitdelivery.viewmodel.CheckOTPViewModel;
 
 import java.util.Locale;
 
@@ -24,7 +28,8 @@ public class VerifyCodeActivity extends AppCompatActivity {
     private TextView tvTimer;
     private Button btnResend, btnNext, btnReturn;
     private CountDownTimer countDownTimer;
-
+    private CheckOTPViewModel viewModel;
+    private String email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,7 @@ public class VerifyCodeActivity extends AppCompatActivity {
         btnResend = findViewById(R.id.btn_resend);
         btnNext = findViewById(R.id.btn_verify_code_next);
         btnReturn = findViewById(R.id.btn_verify_code_return);
+        email = this.getIntent().getStringExtra("email");
 
         for (int i = 0; i < codeBoxes.length; i++) {
             final int index = i;
@@ -64,8 +70,27 @@ public class VerifyCodeActivity extends AppCompatActivity {
                 }
             });
         }
-
+        startTimer();
         action();
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        viewModel.getCheckOTPResponse().observe(this, response -> {
+            if ("success".equalsIgnoreCase(response.getStatus())) {
+                // Thành công -> sang màn hình nhập OTP
+                Intent intent = new Intent(VerifyCodeActivity.this, ResetPasswordActivity.class);
+                intent.putExtra("email", email); // Truyền email nếu cần
+                startActivity(intent);
+            } else {
+                // Backend trả về status lỗi
+                DialogHelper.showErrorDialog(this, response.getMessage());
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            DialogHelper.showErrorDialog(this, error);
+        });
     }
 
     private String getVerificationCode() {
@@ -84,7 +109,8 @@ public class VerifyCodeActivity extends AppCompatActivity {
             String code = getVerificationCode();
             if (code.length() == 6) {
                 // Gửi mã xác nhận lên server
-                Toast.makeText(this, "Mã xác nhận: " + code, Toast.LENGTH_SHORT).show();
+                CheckOTPRequest request = new CheckOTPRequest(email, code);
+                viewModel.checkOTP(request);
             } else {
                 Toast.makeText(this, "Vui lòng nhập đủ 6 chữ số", Toast.LENGTH_SHORT).show();
             }

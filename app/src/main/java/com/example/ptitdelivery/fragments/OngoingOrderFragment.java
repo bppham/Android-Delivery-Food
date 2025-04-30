@@ -24,7 +24,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
-import com.example.ptitdelivery.activities.SeeRouteActivity;
+import com.example.ptitdelivery.activities.SeeRouteToCustomerActivity;
+import com.example.ptitdelivery.activities.SeeRouteToStoreActivity;
 import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.utils.DialogHelper;
@@ -40,7 +41,7 @@ public class OngoingOrderFragment extends Fragment {
     // Step 1
     private CardView cvStep1;
     private TextView tvStoreName, tvStoreAddress, tvOrderStatus;
-    private Button btnNextStep1, btnDetailOrderStep1;
+    private Button btnNextStep1, btnDetailOrderStep1, btnShowDirectionStep1;
     // Step 2
     private CardView cvStep2;
     private TextView tvUserName, tvShippingAddress, tvUserPhoneNumber, tvPaymentMethod;
@@ -68,6 +69,7 @@ public class OngoingOrderFragment extends Fragment {
         tvOrderStatus = view.findViewById(R.id.tv_ongoing_order_status);
         btnNextStep1 = view.findViewById(R.id.btnNextStep1);
         btnDetailOrderStep1 = view.findViewById(R.id.btnDetailOrderStep1);
+        btnShowDirectionStep1 = view.findViewById(R.id.btnShowDirectionStep1);
         // Step 2
         cvStep2 = view.findViewById(R.id.cv_ongoing_order_step_2);
         tvUserName = view.findViewById(R.id.tv_ongoing_order_user_name);
@@ -180,6 +182,11 @@ public class OngoingOrderFragment extends Fragment {
             intent.putExtra("order", order);
             startActivity(intent);
         });
+        btnShowDirectionStep1.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), SeeRouteToStoreActivity.class);
+            intent.putExtra("order", order);
+            startActivity(intent);
+        });
     }
     private void actionStep2(){
         btnCallUser.setOnClickListener(v -> {
@@ -210,7 +217,7 @@ public class OngoingOrderFragment extends Fragment {
         });
 
         btnShowDirectionStep2.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), SeeRouteActivity.class);
+            Intent intent = new Intent(getActivity(), SeeRouteToCustomerActivity.class);
             intent.putExtra("order", order);
             startActivity(intent);
         });

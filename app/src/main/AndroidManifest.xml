@@ -19,7 +19,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.SeeRouteActivity"
+            android:name=".activities.ResetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SeeRouteToStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SeeRouteToCustomerActivity"
             android:exported="false" />
         <activity
             android:name=".activities.ChangePasswordActivity"

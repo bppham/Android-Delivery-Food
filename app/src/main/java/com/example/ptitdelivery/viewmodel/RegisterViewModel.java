@@ -40,7 +40,6 @@ public class RegisterViewModel extends ViewModel {
             }
         });
     }
-
     public LiveData<ShipperRegisterResponse> getRegisterResponse() {
         return registerResponse;
     }
