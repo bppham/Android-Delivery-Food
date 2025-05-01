@@ -15,11 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.model.CheckOTP.CheckOTPRequest;
+import com.example.ptitdelivery.model.ForgetPassword.ForgetPasswordRequest;
 import com.example.ptitdelivery.utils.DialogHelper;
 import com.example.ptitdelivery.viewmodel.CheckOTPViewModel;
+import com.example.ptitdelivery.viewmodel.ForgetPasswordViewModel;
 
 import java.util.Locale;
 
@@ -29,6 +32,7 @@ public class VerifyCodeActivity extends AppCompatActivity {
     private Button btnResend, btnNext, btnReturn;
     private CountDownTimer countDownTimer;
     private CheckOTPViewModel viewModel;
+    private ForgetPasswordViewModel forgetPasswordViewModel;
     private String email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,8 @@ public class VerifyCodeActivity extends AppCompatActivity {
         btnResend = findViewById(R.id.btn_resend);
         btnNext = findViewById(R.id.btn_verify_code_next);
         btnReturn = findViewById(R.id.btn_verify_code_return);
+        viewModel = new ViewModelProvider(this).get(CheckOTPViewModel.class);
+        forgetPasswordViewModel = new ViewModelProvider(this).get(ForgetPasswordViewModel.class);
         email = this.getIntent().getStringExtra("email");
 
         for (int i = 0; i < codeBoxes.length; i++) {
@@ -73,6 +79,7 @@ public class VerifyCodeActivity extends AppCompatActivity {
         startTimer();
         action();
         observeViewModel();
+        observeViewModelForgetPassword();
     }
 
     private void observeViewModel() {
@@ -89,6 +96,20 @@ public class VerifyCodeActivity extends AppCompatActivity {
         });
 
         viewModel.getErrorMessage().observe(this, error -> {
+            DialogHelper.showErrorDialog(this, error);
+        });
+    }
+
+    private void observeViewModelForgetPassword() {
+        forgetPasswordViewModel.getForgetPasswordResponse().observe(this, response -> {
+            if ("success".equalsIgnoreCase(response.getStatus())) {
+                Toast.makeText(this, "Đã gửi lại mã", Toast.LENGTH_SHORT).show();
+            } else {
+                DialogHelper.showErrorDialog(this, response.getMessage());
+            }
+        });
+
+        forgetPasswordViewModel.getErrorMessage().observe(this, error -> {
             DialogHelper.showErrorDialog(this, error);
         });
     }
@@ -118,8 +139,8 @@ public class VerifyCodeActivity extends AppCompatActivity {
 
         btnResend.setOnClickListener(v -> {
             startTimer();
-            // Gửi lại mã xác nhận ở đây (API)
-            Toast.makeText(this, "Đã gửi lại mã", Toast.LENGTH_SHORT).show();
+            ForgetPasswordRequest request = new ForgetPasswordRequest(email);
+            forgetPasswordViewModel.forgetPassword(request);
         });
     }
 

@@ -8,6 +8,8 @@ import com.example.ptitdelivery.model.ForgetPassword.ForgetPasswordRequest;
 import com.example.ptitdelivery.model.ForgetPassword.ForgetPasswordResponse;
 import com.example.ptitdelivery.model.Login.LoginRequest;
 import com.example.ptitdelivery.model.Login.LoginResponse;
+import com.example.ptitdelivery.model.ResetPassword.ResetPasswordRequest;
+import com.example.ptitdelivery.model.ResetPassword.ResetPasswordResponse;
 import com.example.ptitdelivery.model.Shipper.ShipperRegisterRequest;
 import com.example.ptitdelivery.model.Shipper.ShipperRegisterResponse;
 import com.example.ptitdelivery.network.ApiClient;
@@ -57,6 +59,10 @@ public class AuthRepository {
 
     public void checkOTP(CheckOTPRequest request, Callback<CheckOTPResponse> callback) {
         authService.checkOTP(request).enqueue(callback);
+    }
+
+    public void resetPassword(ResetPasswordRequest request, Callback<ResetPasswordResponse> callback) {
+        authService.resetPassword(request).enqueue(callback);
     }
 
 }
