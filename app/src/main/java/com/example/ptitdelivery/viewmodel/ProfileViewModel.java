@@ -10,10 +10,13 @@ import com.example.ptitdelivery.model.ChangePassword.VerifyOldPasswordRequest;
 import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.repositories.ShipperRepository;
 
+import java.io.File;
+
 public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<Shipper> shipper = new MutableLiveData<>();
     private final MutableLiveData<ChangePasswordResponse> responseChangePassword = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isUpdateSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> imageUrl = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private ShipperRepository repository;
@@ -32,11 +35,15 @@ public class ProfileViewModel extends ViewModel {
     public void resetPassword(ResetPasswordRequest request) {
         repository.resetPassword(request, responseChangePassword, isLoading, errorMessage);
     }
-
     public LiveData<ChangePasswordResponse> getResponseChangePassword() {
         return responseChangePassword;
     }
-
+    public void uploadAvatar(File imageFile) {
+        repository.uploadAvatar(imageFile, imageUrl, errorMessage, isLoading);
+    }
+    public LiveData<String> getImageUrlLiveData() {
+        return imageUrl;
+    }
     public LiveData<Shipper> getShipperLiveData() {
         return shipper;
     }

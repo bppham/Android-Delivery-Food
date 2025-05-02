@@ -1,9 +1,13 @@
 package com.example.ptitdelivery.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,21 +31,34 @@ import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.ChangePasswordActivity;
 import com.example.ptitdelivery.activities.LoginActivity;
 import com.example.ptitdelivery.activities.UpdatePersonalInfo;
+import com.example.ptitdelivery.model.Avatar;
 import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.network.service.ShipperService;
 import com.example.ptitdelivery.utils.ConvertString;
+import com.example.ptitdelivery.utils.FileUtils;
 import com.example.ptitdelivery.viewmodel.ProfileViewModel;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "Profile Fragment";
     private ProfileViewModel viewModel;
     private ProgressBar progressBar;
-    private ImageView ivProfileAvatar;
+    private ImageView ivProfileAvatar, ivEditIcon;
     private TextView tvEmail, tvName, tvGender, tvPhoneNumber, tvVehicleName, tvVehicleNumber;
     private Button btnLogout;
     private LinearLayout layoutUpdateProfile, layoutUpdatePassword;
-    private ShipperService shipperApi;
     private Shipper shipper;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +75,7 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btn_profile_logout);
         layoutUpdateProfile = view.findViewById(R.id.layout_update_profile_information);
         layoutUpdatePassword = view.findViewById(R.id.layout_update_profile_password);
+        ivEditIcon = view.findViewById(R.id.iv_edit_icon);
 
         // Lấy ID & Token từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
@@ -67,6 +87,18 @@ public class ProfileFragment extends Fragment {
             Log.e(TAG, "Không tìm thấy token");
             return view;
         }
+
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+                        if (selectedImageUri != null) {
+                            uploadImage(selectedImageUri);
+                        }
+                    }
+                }
+        );
 
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         viewModel.init(token);
@@ -111,6 +143,15 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
+        viewModel.getImageUrlLiveData().observe(getViewLifecycleOwner(), url -> {
+            if (url != null && shipper != null) {
+                // Cập nhật avatar mới
+                Avatar avatar = new Avatar();
+                avatar.setUrl(url);
+                shipper.setAvatar(avatar);
+                viewModel.updateShipper(shipper);
+            }
+        });
     }
     @Override
     public void onResume() {
@@ -144,6 +185,40 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
         });
+        ivEditIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
+        });
     }
 
+    private void uploadImage(Uri imageUri) {
+        try {
+            // Chuyển Uri thành File tạm thời nếu cần thiết (hoặc dùng Uri trực tiếp)
+            File imageFile = createTempFileFromUri(getContext(), imageUri);
+
+            // Gọi viewModel để upload ảnh lên server
+            viewModel.uploadAvatar(imageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Không thể đọc ảnh", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public File createTempFileFromUri(Context context, Uri uri) throws IOException {
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        File tempFile = File.createTempFile("temp_image", ".jpg", context.getCacheDir());
+        OutputStream outputStream = new FileOutputStream(tempFile);
+
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outputStream.close();
+
+        return tempFile;
+    }
 }

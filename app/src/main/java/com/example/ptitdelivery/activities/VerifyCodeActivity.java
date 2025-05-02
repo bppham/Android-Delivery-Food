@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -146,6 +147,7 @@ public class VerifyCodeActivity extends AppCompatActivity {
 
     private void startTimer() {
         btnResend.setEnabled(false);
+        btnResend.setVisibility(View.GONE);
         countDownTimer = new CountDownTimer(2 * 60 * 1000, 1000) { // 2 phút
 
             public void onTick(long millisUntilFinished) {
@@ -160,6 +162,7 @@ public class VerifyCodeActivity extends AppCompatActivity {
             public void onFinish() {
                 tvTimer.setText("00:00");
                 btnResend.setEnabled(true);
+                btnResend.setVisibility(View.VISIBLE);
             }
 
         }.start();

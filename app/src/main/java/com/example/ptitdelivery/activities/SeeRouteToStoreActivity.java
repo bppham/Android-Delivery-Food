@@ -78,6 +78,10 @@ public class SeeRouteToStoreActivity extends AppCompatActivity implements MapEve
         setContentView(R.layout.activity_see_route_to_store);
 
         mapView = findViewById(R.id.mapView);
+        toolbar = findViewById(R.id.toolbar_see_route_to_store);
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
 
         order = (Order) getIntent().getSerializableExtra("order");
         orderId = order.getId();
