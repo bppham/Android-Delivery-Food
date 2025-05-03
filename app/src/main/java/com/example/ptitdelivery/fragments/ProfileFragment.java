@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
+import com.example.ptitdelivery.activities.BiometricSettingActivity;
 import com.example.ptitdelivery.activities.ChangePasswordActivity;
 import com.example.ptitdelivery.activities.LoginActivity;
 import com.example.ptitdelivery.activities.UpdatePersonalInfo;
@@ -55,9 +56,10 @@ public class ProfileFragment extends Fragment {
     private ImageView ivProfileAvatar, ivEditIcon;
     private TextView tvEmail, tvName, tvGender, tvPhoneNumber, tvVehicleName, tvVehicleNumber;
     private Button btnLogout;
-    private LinearLayout layoutUpdateProfile, layoutUpdatePassword;
+    private LinearLayout layoutUpdateProfile, layoutUpdatePassword, layoutUpdateBiometric;
     private Shipper shipper;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private String userId;
 
     @Nullable
     @Override
@@ -75,11 +77,12 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btn_profile_logout);
         layoutUpdateProfile = view.findViewById(R.id.layout_update_profile_information);
         layoutUpdatePassword = view.findViewById(R.id.layout_update_profile_password);
+        layoutUpdateBiometric = view.findViewById(R.id.layout_update_profile_biometric);
         ivEditIcon = view.findViewById(R.id.iv_edit_icon);
 
         // Lấy ID & Token từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
-        String id = sharedPreferences.getString("id", null);
+        userId  = sharedPreferences.getString("id", null);
         String token = sharedPreferences.getString("token", null);
 
         Log.d(TAG, "Stored Token: " + token);
@@ -99,10 +102,9 @@ public class ProfileFragment extends Fragment {
                     }
                 }
         );
-
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         viewModel.init(token);
-        viewModel.getShipper(id);
+        viewModel.getShipper(userId );
 
         observeViewModel();
         action();
@@ -119,22 +121,7 @@ public class ProfileFragment extends Fragment {
         viewModel.getShipperLiveData().observe(getViewLifecycleOwner(), shipper -> {
             this.shipper = shipper;
             if (shipper != null) {
-                Log.d(TAG, "Đã lấy được đơn hàng: " + shipper.getId());
-                tvEmail.setText(shipper.getEmail());
-                tvVehicleNumber.setText(shipper.getVehicle().getNumber());
-                tvVehicleName.setText(shipper.getVehicle().getName());
-                tvName.setText(shipper.getName());
-                String displayGender = ConvertString.convertGender(shipper.getGender());
-                tvGender.setText(displayGender);
-                tvPhoneNumber.setText(shipper.getPhonenumber());
-                if (shipper.getAvatar() != null) {
-                    Glide.with(getActivity())
-                            .load(shipper.getAvatar().getUrl())  // Dùng URL từ đối tượng Avatar
-                            .placeholder(R.drawable.ic_profile)
-                            .into(ivProfileAvatar);
-                } else {
-                    ivProfileAvatar.setImageResource(R.drawable.ic_profile);
-                }
+                updateShipperUI(shipper);
             }
         });
         viewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), message -> {
@@ -153,15 +140,34 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    private void updateShipperUI(Shipper shipper) {
+        tvEmail.setText(shipper.getEmail());
+        tvVehicleNumber.setText(shipper.getVehicle().getNumber());
+        tvVehicleName.setText(shipper.getVehicle().getName());
+        tvName.setText(shipper.getName());
+        String displayGender = ConvertString.convertGender(shipper.getGender());
+        tvGender.setText(displayGender);
+        tvPhoneNumber.setText(shipper.getPhonenumber());
+        if (shipper.getAvatar() != null) {
+            Glide.with(getActivity())
+                    .load(shipper.getAvatar().getUrl())
+                    .placeholder(R.drawable.ic_profile)
+                    .into(ivProfileAvatar);
+        } else {
+            ivProfileAvatar.setImageResource(R.drawable.ic_profile);
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         String id = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).getString("id", null);
         if (id != null) {
-            viewModel.getShipper(id);  // Lấy lại thông tin shipper mới
+            Log.d(TAG, "onResume: Đang lấy lại dữ liệu shipper...");
+            viewModel.getShipper(id);  // Gọi lại API nếu chưa có dữ liệu
         }
     }
-
 
     private void logout(SharedPreferences sharedPreferences) {
         btnLogout.setOnClickListener(v -> {
@@ -183,6 +189,10 @@ public class ProfileFragment extends Fragment {
         });
         layoutUpdatePassword.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+            startActivity(intent);
+        });
+        layoutUpdateBiometric.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), BiometricSettingActivity.class);
             startActivity(intent);
         });
         ivEditIcon.setOnClickListener(v -> {

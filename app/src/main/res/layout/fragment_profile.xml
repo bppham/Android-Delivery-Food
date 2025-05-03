@@ -146,6 +146,7 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                android:id="@+id/layout_update_profile_biometric"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="10dp"
@@ -169,7 +170,7 @@
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
-                                        app:srcCompat="@drawable/avatar" />
+                                        app:srcCompat="@drawable/biometric" />
                                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                                 <TextView
@@ -178,7 +179,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="8dp"
                                     android:layout_marginBottom="8dp"
-                                    android:text="Ảnh đại diện"
+                                    android:text="Vân tay"
                                     android:textAlignment="center"
                                     android:textColor="#000000"
                                     android:textSize="13sp"

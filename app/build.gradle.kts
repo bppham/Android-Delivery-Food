@@ -55,4 +55,6 @@ dependencies {
     implementation ("io.socket:socket.io-client:2.0.1")
     implementation ("org.osmdroid:osmdroid-android:6.1.16")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("androidx.biometric:biometric:1.1.0")
+
 }

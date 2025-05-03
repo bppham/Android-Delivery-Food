@@ -70,12 +70,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     String message = response.getMessage();
                     if ("Mật khẩu đúng!".equals(message)) {
                         // Mật khẩu cũ đúng, cho phép đổi mật khẩu mới
-                        showToast("Mật khẩu cũ đúng! Bạn có thể đổi mật khẩu.");
+                        showToast("Đổi mật khẩu thành công");
 
                         // Sau khi verify mật khẩu cũ thành công, tiếp tục đổi mật khẩu mới
                         String newPassword = edtNewPassword.getText().toString();
                         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(newPassword);
-                        viewModel.resetPassword(resetPasswordRequest);  // Đổi mật khẩu mới
+                        viewModel.resetPassword(resetPasswordRequest);
+                        finish();
                     } else {
                         // Mật khẩu cũ sai
                         showToast("Mật khẩu cũ không đúng. Vui lòng thử lại.");

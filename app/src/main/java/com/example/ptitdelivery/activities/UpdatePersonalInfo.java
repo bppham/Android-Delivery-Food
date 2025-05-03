@@ -1,6 +1,7 @@
 package com.example.ptitdelivery.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +14,11 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
+import com.example.ptitdelivery.fragments.ProfileFragment;
 import com.example.ptitdelivery.model.Shipper.Shipper;
 import com.example.ptitdelivery.model.Vehicle;
 import com.example.ptitdelivery.viewmodel.ProfileViewModel;
@@ -122,14 +125,13 @@ public class UpdatePersonalInfo extends AppCompatActivity {
             // Gọi ViewModel update
             viewModel.updateShipper(updatedShipper);
 
-            String id = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE).getString("id", null);
-            if (id != null) {
-                viewModel.getShipper(id); // Gọi lại để làm mới dữ liệu
-            }
-
             // Có thể show loading hoặc quay về màn trước, tùy bạn
-            Toast.makeText(this, "Đang cập nhật thông tin...", Toast.LENGTH_SHORT).show();
-            finish();
+            Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+            Log.d("FragmentDebug", "Replacing fragment...");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.update_info_container, new ProfileFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
     }
 }
