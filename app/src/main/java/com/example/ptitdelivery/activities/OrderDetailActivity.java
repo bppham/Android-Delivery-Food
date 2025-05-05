@@ -80,8 +80,8 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void showUserInfo(Order order){
-        tvUserName.setText(order.getUser().getName());
-        tvUserPhonenumber.setText(order.getUser().getPhonenumber());
+        tvUserName.setText(order.getCustomerName());
+        tvUserPhonenumber.setText(order.getCustomerPhonenumber());
         Glide.with(this).load(order.getUser().getAvatar().getUrl()).into(imgUser);
     }
 
@@ -103,9 +103,11 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             int base = item.getDish().getPrice();
             int toppingsTotal = 0;
-            for (Topping t : item.getToppings()) toppingsTotal += t.getPrice();
-            int total = (base + toppingsTotal) * item.getQuantity();
-            tvPrice.setText("Tổng: " + total + " VND");
+//            for (Topping t : item.getToppings()) toppingsTotal += t.getPrice();
+//            int total = (base + toppingsTotal) * item.getQuantity();
+//            tvPrice.setText("Tổng: " + total + " VND");
+
+            tvPrice.setText(item.getDish().getPrice() + " VND");
 
             // Load ảnh món ăn
             Glide.with(this).load(item.getDish().getImage().getUrl()).into(imgDish);
@@ -132,7 +134,12 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         int totalMoney = 0;
         for (Item item : order.getItems()) {
-            totalMoney += item.getQuantity() * item.getDish().getPrice();
+            int base = item.getDish().getPrice();
+            int toppingsTotal = 0;
+            for (Topping topping : item.getToppings()) {
+                toppingsTotal += topping.getPrice();
+            }
+            totalMoney += (base + toppingsTotal) * item.getQuantity();
         }
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         tvMoneyTotal.setText(formatter.format(totalMoney) + " VND");

@@ -22,6 +22,8 @@ public class Order implements Serializable {
     private String updatedAt;
     private String shipper;
     private ShipLocation shipLocation;
+    private String customerName;
+    private String customerPhonenumber;
 
     public String getId() {
         return id;
@@ -101,5 +103,21 @@ public class Order implements Serializable {
 
     public void setShipLocation(ShipLocation shipLocation) {
         this.shipLocation = shipLocation;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerPhonenumber() {
+        return customerPhonenumber;
+    }
+
+    public void setCustomerPhonenumber(String customerPhonenumber) {
+        this.customerPhonenumber = customerPhonenumber;
     }
 }

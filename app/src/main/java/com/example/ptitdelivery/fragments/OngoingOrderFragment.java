@@ -118,12 +118,13 @@ public class OngoingOrderFragment extends Fragment {
                 // Step 1
                 tvStoreName.setText(order.getStore().getName());
                 tvStoreAddress.setText(order.getStore().getAddress().getFull_address());
-                tvOrderStatus.setText(order.getStatus());
+                String displayStatus = ConvertString.convertOrderStatus(order.getStatus());
+                tvOrderStatus.setText(displayStatus);
 
                 // Step 2
-                tvUserName.setText(order.getUser().getName());
+                tvUserName.setText(order.getCustomerName());
                 tvShippingAddress.setText(order.getShipLocation().getAddress());
-                tvUserPhoneNumber.setText(order.getUser().getPhonenumber());
+                tvUserPhoneNumber.setText(order.getCustomerPhonenumber());
                 String displayPaymentMethod = ConvertString.convertPaymentMethod(order.getPaymentMethod());
                 tvPaymentMethod.setText(displayPaymentMethod);
 

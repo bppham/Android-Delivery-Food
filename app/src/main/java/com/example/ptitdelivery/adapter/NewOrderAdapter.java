@@ -22,6 +22,8 @@ import com.example.ptitdelivery.activities.OrderDetailActivity;
 import com.example.ptitdelivery.fragments.OngoingOrderFragment;
 import com.example.ptitdelivery.model.Item;
 import com.example.ptitdelivery.model.Order.Order;
+import com.example.ptitdelivery.model.Topping;
+import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.utils.DialogHelper;
 import com.example.ptitdelivery.viewmodel.NewOrdersViewModel;
 
@@ -91,34 +93,27 @@ public class NewOrderAdapter extends BaseAdapter {
                 .into(holder.imgStoreAvatar);
 
         // User Info
-        String userInfo = order.getUser().getName() + " - " + order.getUser().getPhonenumber();
+        String userInfo = "👤 " +  order.getCustomerName() + " - " + order.getCustomerPhonenumber();
         holder.tvUserInfo.setText(userInfo);
 
         // Ship location
-        holder.tvShipLocation.setText(order.getStore().getAddress().getFull_address());
+        holder.tvShipLocation.setText("📍 " + order.getStore().getAddress().getFull_address());
 
         // Payment method
         String paymentMethod = order.getPaymentMethod();
-        String displayMethod;
+        String displayMethod = ConvertString.convertPaymentMethod(paymentMethod);
 
-        switch (paymentMethod) {
-            case "cash":
-                displayMethod = "Tiền mặt";
-                break;
-            case "credit_card":
-                displayMethod = "Thẻ";
-                break;
-            default:
-                displayMethod = "Không xác định";
-                break;
-        }
-
-        holder.tvPaymentMethod.setText(displayMethod);
+        holder.tvPaymentMethod.setText("💳 " + displayMethod);
 
         // Total money
         int totalMoney = 0;
         for (Item item : order.getItems()) {
-            totalMoney += item.getQuantity() * item.getDish().getPrice();
+            int dishPrice = item.getDish().getPrice();
+            int toppingPrice = 0;
+            for (Topping topping : item.getToppings()) {
+                toppingPrice += topping.getPrice();
+            }
+            totalMoney += (dishPrice + toppingPrice) * item.getQuantity();
         }
         holder.tvMoneyTotal.setText(totalMoney + " VND");
 
