@@ -14,6 +14,6 @@
         android:title="Hồ sơ" />
     <item
         android:id="@+id/nav_policy"
-        android:icon="@drawable/ic_policy"
-        android:title="Chính sách" />
+        android:icon="@drawable/ic_chat_2"
+        android:title="Trò chuyện" />
 </menu>

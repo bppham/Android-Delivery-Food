@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.ptitdelivery.fragments.ChatFragment;
 import com.example.ptitdelivery.fragments.OrderFragment;
 import com.example.ptitdelivery.fragments.PolicyFragment;
 import com.example.ptitdelivery.fragments.ProfileFragment;
@@ -29,7 +30,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 return new ProfileFragment();
             case 3:
-                return new PolicyFragment();
+                return new ChatFragment();
             default:
                 return null;
         }
