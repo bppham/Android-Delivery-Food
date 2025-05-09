@@ -117,10 +117,10 @@ public class DetailMessageActivity extends AppCompatActivity {
             }
         });
 
-        SocketManager.setOnMessageReceivedListener(args  -> runOnUiThread(() -> {
-            Log.d("DetailMessageActivity", "onMessageReceived");
-            setupAllMessages();
-        }));
+//        SocketManager.setOnMessageReceivedListener(args  -> runOnUiThread(() -> {
+//            Log.d("DetailMessageActivity", "onMessageReceived");
+//            setupAllMessages();
+//        }));
 
         SocketManager.setOnMessageDeletedListener(args  -> runOnUiThread(() -> {
             setupAllMessages();
@@ -135,7 +135,7 @@ public class DetailMessageActivity extends AppCompatActivity {
                     case SUCCESS:
 //                        messageList.add(resource.getData().getData());
 //                        messageAdapter.notifyItemInserted(messageList.size() - 1);
-
+                        setupAllMessages();
                         chatRecyclerView.post(new Runnable() {
                             @Override
                             public void run() {

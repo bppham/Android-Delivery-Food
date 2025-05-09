@@ -18,6 +18,7 @@ import com.example.ptitdelivery.utils.SharedPreferencesHelper;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,10 @@ public class ChatRepository {
     public LiveData<Resource<Chat>> createChat(String id, String storeId) {
         MutableLiveData<Resource<Chat>> result = new MutableLiveData<>();
         result.setValue(Resource.loading(null));
+        Map<String, String> data = new HashMap<>();
+        data.put("storeId", storeId);
 
-        chatService.createChat(id, storeId).enqueue(new Callback<Chat>() {
+        chatService.createChat(id, data).enqueue(new Callback<Chat>() {
             @Override
             public void onResponse(Call<Chat> call, Response<Chat> response) {
                 if (response.isSuccessful() && response.body() != null) {

@@ -13,7 +13,6 @@ public class Message implements Serializable {
     private User sender;
     private String content;
     private Image image;
-    private String chat;
     private Timestamp updatedAt;
 
     public String getId() {
@@ -38,14 +37,6 @@ public class Message implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getChat() {
-        return chat;
-    }
-
-    public void setChat(String chat) {
-        this.chat = chat;
     }
 
     public Image getImage() {

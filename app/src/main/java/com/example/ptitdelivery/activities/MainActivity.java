@@ -7,10 +7,6 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                         mBottomNavigationView.getMenu().findItem(R.id.nav_profile).setChecked(true);
                         break;
                     case 3:
-                        toolbarTitle.setText("Chính sách");
+                        toolbarTitle.setText("Trò chuyện");
                         mBottomNavigationView.getMenu().findItem(R.id.nav_policy).setChecked(true);
                         break;
                 }

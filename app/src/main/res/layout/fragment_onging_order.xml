@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/progressBar_ongoing_order"
@@ -397,6 +397,18 @@
                             android:gravity="end">
 
                             <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnChatWithClient"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:backgroundTint="#EDE9E9"
+                                android:contentDescription="Add"
+                                android:padding="8dp"
+                                app:icon="@drawable/ic_chat"
+                                app:iconTint="@color/green"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent"
+                                android:layout_marginRight="10dp"/>
+
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCallUser"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
@@ -404,7 +416,7 @@
                                 android:contentDescription="Add"
                                 android:padding="8dp"
                                 app:icon="@drawable/ic_call"
-                                app:iconTint="@color/green"
+                                app:iconTint="@color/purple"
                                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent"
                                 android:layout_marginRight="10dp"/>
 

@@ -1,5 +1,7 @@
 package com.example.ptitdelivery.fragments;
 
+import static com.example.ptitdelivery.utils.Resource.Status.LOADING;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -20,15 +22,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
+import com.example.ptitdelivery.activities.DetailMessageActivity;
 import com.example.ptitdelivery.activities.OrderDetailActivity;
 import com.example.ptitdelivery.activities.SeeRouteToCustomerActivity;
 import com.example.ptitdelivery.activities.SeeRouteToStoreActivity;
+import com.example.ptitdelivery.model.Chat.Chat;
 import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.utils.DialogHelper;
+import com.example.ptitdelivery.utils.Resource;
+import com.example.ptitdelivery.viewmodel.ChatViewModel;
 import com.example.ptitdelivery.viewmodel.OngoingOrderViewModel;
 
 public class OngoingOrderFragment extends Fragment {
@@ -38,14 +45,15 @@ public class OngoingOrderFragment extends Fragment {
     private LinearLayout hasOrderLayout;
     private ProgressBar progressBar;
     private Order order;
+    private ChatViewModel chatViewModel;
     // Step 1
     private CardView cvStep1;
     private TextView tvStoreName, tvStoreAddress, tvOrderStatus;
-    private Button btnNextStep1, btnDetailOrderStep1, btnShowDirectionStep1;
+    private Button btnNextStep1, btnDetailOrderStep1, btnShowDirectionStep1, btnChatWithStore;
     // Step 2
     private CardView cvStep2;
     private TextView tvUserName, tvShippingAddress, tvUserPhoneNumber, tvPaymentMethod;
-    private Button btnNextStep2, btnCallUser, btnDetailOrderStep2, btnShowDirectionStep2;
+    private Button btnNextStep2, btnCallUser, btnDetailOrderStep2, btnShowDirectionStep2, btnChatWithClient;
     // Step 3
     private CardView cvStep3;
     private TextView tvOrderId;
@@ -70,6 +78,7 @@ public class OngoingOrderFragment extends Fragment {
         btnNextStep1 = view.findViewById(R.id.btnNextStep1);
         btnDetailOrderStep1 = view.findViewById(R.id.btnDetailOrderStep1);
         btnShowDirectionStep1 = view.findViewById(R.id.btnShowDirectionStep1);
+        btnChatWithStore = view.findViewById(R.id.btnChatWithStore);
         // Step 2
         cvStep2 = view.findViewById(R.id.cv_ongoing_order_step_2);
         tvUserName = view.findViewById(R.id.tv_ongoing_order_user_name);
@@ -80,6 +89,7 @@ public class OngoingOrderFragment extends Fragment {
         btnCallUser = view.findViewById(R.id.btnCallUser);
         btnDetailOrderStep2 = view.findViewById(R.id.btnDetailOrderStep2);
         btnShowDirectionStep2 = view.findViewById(R.id.btnShowDirectionStep2);
+        btnChatWithClient = view.findViewById(R.id.btnChatWithClient);
         // Step 3
         cvStep3 = view.findViewById(R.id.cv_ongoing_order_step_3);
         tvOrderId = view.findViewById(R.id.tv_ongoing_order_id);
@@ -96,6 +106,29 @@ public class OngoingOrderFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(OngoingOrderViewModel.class);
         viewModel.init(token);
         viewModel.getTakenOrder();
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+        chatViewModel.init(token);
+
+        chatViewModel.getCreateChatResponse().observe(this, new Observer<Resource<Chat>>() {
+            @Override
+            public void onChanged(Resource<Chat> resource) {
+                switch (resource.getStatus()) {
+                    case LOADING:
+//                        swipeRefreshLayout.setRefreshing(true);
+                        break;
+                    case SUCCESS:
+//                        swipeRefreshLayout.setRefreshing(false);
+                        Chat chat = resource.getData();
+                        Intent intent = new Intent(getActivity(), DetailMessageActivity.class);
+                        intent.putExtra("chatId", chat.getId());
+                        startActivity(intent);
+                        break;
+                    case ERROR:
+//                        swipeRefreshLayout.setRefreshing(false);
+                        break;
+                }
+            }
+        });
 
         observeViewModel();
 
@@ -168,6 +201,7 @@ public class OngoingOrderFragment extends Fragment {
                 }
             }
         });
+
     }
 
     private void actionStep1(){
@@ -187,6 +221,9 @@ public class OngoingOrderFragment extends Fragment {
             Intent intent = new Intent(getActivity(), SeeRouteToStoreActivity.class);
             intent.putExtra("order", order);
             startActivity(intent);
+        });
+        btnChatWithStore.setOnClickListener(view -> {
+            chatViewModel.createChat(order.getStore().getOwner(), order.getStore().getId());
         });
     }
     private void actionStep2(){
