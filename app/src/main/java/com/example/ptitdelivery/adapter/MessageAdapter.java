@@ -35,11 +35,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_SENT = 1;
     private static final int VIEW_TYPE_RECEIVED = 2;
     private FragmentActivity activity;
+    private String chatId;
 
-    public MessageAdapter(FragmentActivity activity, Context context, List<Message> messageList) {
+    public MessageAdapter(FragmentActivity activity, Context context, List<Message> messageList, String chatId) {
         this.activity = activity;
         this.context = context;
         this.messageList = messageList;
+        this.chatId = chatId;
     }
 
     @Override
@@ -108,7 +110,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .setTitle("Xóa tin nhắn")
                 .setMessage("Bạn có chắc chắn muốn xóa tin nhắn này không?")
                 .setPositiveButton("Có", (dialog, which) -> {
-                    chatViewModel.deleteMessage(message.getId());
+                    chatViewModel.deleteMessage(message.getId(), chatId);
                     SocketManager.deleteMessage(message.getId());
                 })
                 .setNegativeButton("Không", null)

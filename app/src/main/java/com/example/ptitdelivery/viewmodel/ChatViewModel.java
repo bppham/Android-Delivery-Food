@@ -21,8 +21,8 @@ public class ChatViewModel extends ViewModel {
         repository = new ChatRepository(token);
     }
 
-    private final MutableLiveData<Resource<Chat>> createChatResponse = new MutableLiveData<>();
-    public LiveData<Resource<Chat>> getCreateChatResponse() {
+    private final MutableLiveData<Resource<String>> createChatResponse = new MutableLiveData<Resource<String>>();
+    public LiveData<Resource<String>> getCreateChatResponse() {
         return createChatResponse;
     }
     private final MutableLiveData<Resource<ApiResponse<Message>>> sendMessageResponse = new MutableLiveData<>();
@@ -46,10 +46,10 @@ public class ChatViewModel extends ViewModel {
         return deleteMessageResponse;
     }
     public void createChat(String id, String storeId) {
-        LiveData<Resource<Chat>> result = repository.createChat(id, storeId);
-        result.observeForever(new Observer<Resource<Chat>>() {
+        LiveData<Resource<String>> result = repository.createChat(id, storeId);
+        result.observeForever(new Observer<Resource<String>>() {
             @Override
-            public void onChanged(Resource<Chat> resource) {
+            public void onChanged(Resource<String> resource) {
                 createChatResponse.setValue(resource);
             }
         });
@@ -95,12 +95,16 @@ public class ChatViewModel extends ViewModel {
         });
     }
 
-    public void deleteMessage(String id) {
-        LiveData<Resource<ApiResponse<String>>> result = repository.deleteMessage(id);
+    public void deleteMessage(String messageId, String chatId) {
+        LiveData<Resource<ApiResponse<String>>> result = repository.deleteMessage(messageId);
         result.observeForever(new Observer<Resource<ApiResponse<String>>>() {
             @Override
             public void onChanged(Resource<ApiResponse<String>> resource) {
                 deleteMessageResponse.setValue(resource);
+
+                if (resource.getStatus() == Resource.Status.SUCCESS) {
+                    getAllMessages(chatId); // GỌI LẠI danh sách tin nhắn sau khi xóa thành công
+                }
             }
         });
     }

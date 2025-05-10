@@ -19,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/whiteColor"
-            app:srcCompat="@drawable/ic_dots_horizontal" />
+            app:srcCompat="@drawable/ic_more" />
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_chat_right"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="20dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
             android:text="Hi there!"

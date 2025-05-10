@@ -109,22 +109,28 @@ public class OngoingOrderFragment extends Fragment {
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         chatViewModel.init(token);
 
-        chatViewModel.getCreateChatResponse().observe(this, new Observer<Resource<Chat>>() {
+        chatViewModel.getCreateChatResponse().observe(getViewLifecycleOwner(), new Observer<Resource<String>>() {
             @Override
-            public void onChanged(Resource<Chat> resource) {
+            public void onChanged(Resource<String> resource) {
+                Log.d(TAG, "Create chat response status: " + resource.getStatus());
+
                 switch (resource.getStatus()) {
                     case LOADING:
-//                        swipeRefreshLayout.setRefreshing(true);
+                        Log.d(TAG, "Đang tạo chat...");
                         break;
                     case SUCCESS:
-//                        swipeRefreshLayout.setRefreshing(false);
-                        Chat chat = resource.getData();
-                        Intent intent = new Intent(getActivity(), DetailMessageActivity.class);
-                        intent.putExtra("chatId", chat.getId());
-                        startActivity(intent);
+                        Log.d(TAG, "Tạo chat thành công.");
+                        String chat = resource.getData();
+                        if (chat != null) {
+                            Intent intent = new Intent(getActivity(), DetailMessageActivity.class);
+                            intent.putExtra("chatId", chat);
+                            startActivity(intent);
+                        } else {
+                            Log.e(TAG, "Chat rỗng.");
+                        }
                         break;
                     case ERROR:
-//                        swipeRefreshLayout.setRefreshing(false);
+                        Log.e(TAG, "Lỗi khi tạo chat: " + resource.getMessage());
                         break;
                 }
             }
@@ -258,6 +264,11 @@ public class OngoingOrderFragment extends Fragment {
             Intent intent = new Intent(getActivity(), SeeRouteToCustomerActivity.class);
             intent.putExtra("order", order);
             startActivity(intent);
+        });
+        btnChatWithClient.setOnClickListener(v -> {
+            chatViewModel.createChat(order.getUser().getId(), null);
+            Log.d(TAG, order.getUser().getId());
+            Log.d(TAG, order.getUser().getName());
         });
     }
 

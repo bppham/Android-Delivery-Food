@@ -2,6 +2,7 @@ package com.example.ptitdelivery.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,14 +36,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     private List<Chat> chatList;
     private OnChatClickListener onChatClickListener;
     private FragmentActivity fragment;
+    private String shipper_id;
     public interface OnChatClickListener {
         void onChatClick(Chat chat);
     }
 
-    public ChatAdapter(FragmentActivity fragment, Context context, List<Chat> chatList, OnChatClickListener onChatClickListener) {
+    public ChatAdapter(FragmentActivity fragment, Context context, List<Chat> chatList, String shipper_id, OnChatClickListener onChatClickListener) {
         this.fragment = fragment;
         this.context = context;
         this.chatList = chatList;
+        this.shipper_id = shipper_id;
         this.onChatClickListener = onChatClickListener;
     }
 
@@ -62,6 +65,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             holder.tvUserName.setText(chat.getStore().getName());
 
             String userAvatarUrl = chat.getStore().getAvatar() != null ? chat.getStore().getAvatar().getUrl() : null;
+            Glide.with(context)
+                    .asBitmap()
+                    .load(userAvatarUrl)
+                    .override(60, 60)
+                    .centerCrop()
+                    .into(new BitmapImageViewTarget(holder.ivUserAvatar) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable roundedDrawable =
+                                    RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                            roundedDrawable.setCornerRadius(6);
+                            holder.ivUserAvatar.setImageDrawable(roundedDrawable);
+                        }
+                    });
+        } else if (shipper_id.equals(chat.getUsers().get(0).getId())){
+
+            holder.tvUserName.setText(chat.getUsers().get(1).getName());
+
+            String userAvatarUrl = chat.getUsers().get(1).getAvatar() != null ? chat.getUsers().get(1).getAvatar().getUrl() : null;
             Glide.with(context)
                     .asBitmap()
                     .load(userAvatarUrl)

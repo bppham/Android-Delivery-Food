@@ -38,6 +38,7 @@ public class ChatFragment extends Fragment {
     private RecyclerView chatRecyclerView;
     private ChatAdapter chatAdapter;
     private List<Chat> chatList;
+    private String shipper_id;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class ChatFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::refreshData);
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
+        shipper_id = sharedPreferences.getString("id", null);
         Log.d(TAG, "Stored Token: " + token);
         if (token == null) {
             Log.e(TAG, "Không tìm thấy token");
@@ -83,7 +85,7 @@ public class ChatFragment extends Fragment {
     private void setupUserChat() {
         chatRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatList = new ArrayList<>();
-        chatAdapter = new ChatAdapter(requireActivity(),getContext(), chatList, chat -> {
+        chatAdapter = new ChatAdapter(requireActivity(),getContext(), chatList, shipper_id, chat -> {
             Intent intent = new Intent(requireContext(), DetailMessageActivity.class);
             intent.putExtra("chatId", chat.getId());
             startActivity(intent);
