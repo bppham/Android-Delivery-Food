@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.activities.DetailMessageActivity;
@@ -43,7 +45,7 @@ public class OngoingOrderFragment extends Fragment {
     private OngoingOrderViewModel viewModel;
     private LinearLayout noOrderLayout;
     private LinearLayout hasOrderLayout;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Order order;
     private ChatViewModel chatViewModel;
     // Step 1
@@ -67,9 +69,10 @@ public class OngoingOrderFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_onging_order, container, false);
 
         // Ánh xá
-        progressBar = view.findViewById(R.id.progressBar_ongoing_order);
         noOrderLayout = view.findViewById(R.id.layout_no_ongoing_order);
         hasOrderLayout = view.findViewById(R.id.layout_has_ongoing_order);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
         // Step 1
         cvStep1 = view.findViewById(R.id.cv_ongoing_order_step_1);
         tvStoreName = view.findViewById(R.id.tv_ongoing_order_store_name);
@@ -105,6 +108,7 @@ public class OngoingOrderFragment extends Fragment {
         }
         viewModel = new ViewModelProvider(this).get(OngoingOrderViewModel.class);
         viewModel.init(token);
+        swipeRefreshLayout.setRefreshing(true);
         viewModel.getTakenOrder();
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         chatViewModel.init(token);
@@ -144,11 +148,12 @@ public class OngoingOrderFragment extends Fragment {
     private void observeViewModel() {
         viewModel.getIsLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
-                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                swipeRefreshLayout.setRefreshing(isLoading);
             }
         });
 
         viewModel.getTakenOrderLiveData().observe(getViewLifecycleOwner(), order -> {
+            swipeRefreshLayout.setRefreshing(false);
             if (order != null) {
                 Log.d(TAG, "Đã lấy được đơn hàng: " + order.getId());
                 noOrderLayout.setVisibility(View.GONE);
@@ -187,11 +192,12 @@ public class OngoingOrderFragment extends Fragment {
         viewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), message -> {
             if (message != null && !message.isEmpty()) {
                 Log.e(TAG, "Lỗi: " + message);
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             }
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         viewModel.getUpdatedOrderLiveData().observe(getViewLifecycleOwner(), updatedOrder -> {
+            swipeRefreshLayout.setRefreshing(false);
             if (updatedOrder != null) {
                 this.order = updatedOrder;
                 updateStepUI(updatedOrder.getStatus());
@@ -209,7 +215,9 @@ public class OngoingOrderFragment extends Fragment {
         });
 
     }
-
+    private void refreshData() {
+        viewModel.getTakenOrder();
+    }
     private void actionStep1(){
         btnNextStep1.setOnClickListener(v -> {
             if (order != null) {
@@ -271,7 +279,6 @@ public class OngoingOrderFragment extends Fragment {
             Log.d(TAG, order.getUser().getName());
         });
     }
-
     private void actionStep3(){
         btnNextStep3.setOnClickListener(v -> {
             if (order != null) {
@@ -286,7 +293,6 @@ public class OngoingOrderFragment extends Fragment {
             startActivity(intent);
         });
     }
-
     private void updateStepUI(String status) {
         if (status.equals("taken")) {
             enableAllChildren(cvStep1);
@@ -302,7 +308,6 @@ public class OngoingOrderFragment extends Fragment {
             enableAllChildren(cvStep3);
         }
     }
-
     private void disableAllChildren(ViewGroup viewGroup) {
         viewGroup.setAlpha(0.6f);  // Làm mờ luôn cả thẻ ngoài
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -314,7 +319,6 @@ public class OngoingOrderFragment extends Fragment {
             }
         }
     }
-
     private void enableAllChildren(ViewGroup viewGroup) {
         viewGroup.setAlpha(1.0f);
         for (int i = 0; i < viewGroup.getChildCount(); i++) {

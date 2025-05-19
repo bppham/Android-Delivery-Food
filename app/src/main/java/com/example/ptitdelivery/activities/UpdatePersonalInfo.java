@@ -95,24 +95,29 @@ public class UpdatePersonalInfo extends AppCompatActivity {
     }
 
     private void action() {
+        viewModel.getIsUpdateSuccess().observe(this, success -> {
+            if (success != null && success) {
+                Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.update_info_container, new ProfileFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            } else {
+                Toast.makeText(this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         btnConfirm.setOnClickListener(v -> {
-            // Lấy dữ liệu mới từ form
             String newPhoneNumber = edtPhonenumber.getText().toString().trim();
             String newVehicleName = edtVehicleName.getText().toString().trim();
             String newVehicleNumber = edtVehicleNumber.getText().toString().trim();
 
-            // Lấy giới tính mới
             String newGender = null;
             int selectedGenderId = radioGroupGender.getCheckedRadioButtonId();
-            if (selectedGenderId == R.id.radioMale) {
-                newGender = "male";
-            } else if (selectedGenderId == R.id.radioFemale) {
-                newGender = "female";
-            } else if (selectedGenderId == R.id.radioOther) {
-                newGender = "other";
-            }
+            if (selectedGenderId == R.id.radioMale) newGender = "male";
+            else if (selectedGenderId == R.id.radioFemale) newGender = "female";
+            else if (selectedGenderId == R.id.radioOther) newGender = "other";
 
-            // Tạo object shipper mới để gửi lên server
             Shipper updatedShipper = new Shipper();
             updatedShipper.setPhonenumber(newPhoneNumber);
             updatedShipper.setGender(newGender);
@@ -122,16 +127,8 @@ public class UpdatePersonalInfo extends AppCompatActivity {
             vehicle.setNumber(newVehicleNumber);
             updatedShipper.setVehicle(vehicle);
 
-            // Gọi ViewModel update
-            viewModel.updateShipper(updatedShipper);
-
-            // Có thể show loading hoặc quay về màn trước, tùy bạn
-            Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-            Log.d("FragmentDebug", "Replacing fragment...");
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.update_info_container, new ProfileFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
+            viewModel.updateShipper(updatedShipper); // Gọi update
         });
     }
+
 }

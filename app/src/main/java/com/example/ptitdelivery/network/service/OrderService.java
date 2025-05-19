@@ -26,7 +26,7 @@ public interface OrderService {
     @GET("order/finished")
     Call<OrderResponse> getOrders();
     @PUT("order/{orderId}/accept")
-    Call<OrderResponse> acceptOrder(@Path("orderId") String orderId);
+    Call<SingleOrderResponse> acceptOrder(@Path("orderId") String orderId);
     @GET("order/taken")
     Call<SingleOrderResponse> getTakenOrder();
     @PUT("order/{orderId}/update-status")

@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.ptitdelivery.R;
@@ -52,7 +53,7 @@ import okhttp3.RequestBody;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "Profile Fragment";
     private ProfileViewModel viewModel;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView ivProfileAvatar, ivEditIcon;
     private TextView tvEmail, tvName, tvGender, tvPhoneNumber, tvVehicleName, tvVehicleNumber;
     private Button btnLogout;
@@ -66,7 +67,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view;
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-        progressBar = view.findViewById(R.id.progressBar_profile);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         ivProfileAvatar = view.findViewById(R.id.iv_profile_image);
         tvEmail = view.findViewById(R.id.tv_profile_email);
         tvName = view.findViewById(R.id.tv_profile_name);
@@ -80,6 +81,7 @@ public class ProfileFragment extends Fragment {
         layoutUpdateBiometric = view.findViewById(R.id.layout_update_profile_biometric);
         ivEditIcon = view.findViewById(R.id.iv_edit_icon);
 
+
         // Lấy ID & Token từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId  = sharedPreferences.getString("id", null);
@@ -90,6 +92,8 @@ public class ProfileFragment extends Fragment {
             Log.e(TAG, "Không tìm thấy token");
             return view;
         }
+
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
 
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -112,22 +116,29 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+
+    private void refreshData() {
+        viewModel.getShipper(userId);
+    }
+
     private void observeViewModel() {
         viewModel.getIsLoadingLiveData().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
-                progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                swipeRefreshLayout.setRefreshing(isLoading);
             }
         });
         viewModel.getShipperLiveData().observe(getViewLifecycleOwner(), shipper -> {
             this.shipper = shipper;
             if (shipper != null) {
                 updateShipperUI(shipper);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         viewModel.getErrorMessageLiveData().observe(getViewLifecycleOwner(), message -> {
             if (message != null && !message.isEmpty()) {
                 Log.e(TAG, "Lỗi: " + message);
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         viewModel.getImageUrlLiveData().observe(getViewLifecycleOwner(), url -> {

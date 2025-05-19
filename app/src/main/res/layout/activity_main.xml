@@ -42,16 +42,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/main_color"
                 android:layout_gravity="center"/>
-
-            <!-- Avatar User -->
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_profile"
-                android:layout_gravity="end"
-                android:padding="8dp"
-                android:scaleType="fitCenter"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

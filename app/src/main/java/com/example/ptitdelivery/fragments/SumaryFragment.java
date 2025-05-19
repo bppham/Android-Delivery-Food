@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.adapter.HistoryOrdersAdapter;
@@ -28,7 +29,7 @@ public class SumaryFragment extends Fragment {
     private static final String TAG = "SummaryOrderFragment";
     private DeliveredOrdersViewModel viewModel;
     private GridView gvOrders;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private Button btnNext, btnPrev;
     private TextView tvPage;
     private HistoryOrdersAdapter adapter;
@@ -39,10 +40,15 @@ public class SumaryFragment extends Fragment {
         View view;
         view = inflater.inflate(R.layout.fragment_sumary, container, false);
         gvOrders = view.findViewById(R.id.gv_history_orders);
-        progressBar = view.findViewById(R.id.progressBarHistoryOrders);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         btnNext = view.findViewById(R.id.btnNext);
         btnPrev = view.findViewById(R.id.btnPrev);
         tvPage = view.findViewById(R.id.tvPageNumber);
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
+        swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> {
+            return gvOrders != null && gvOrders.canScrollVertically(-1);
+        });
+
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
@@ -66,15 +72,17 @@ public class SumaryFragment extends Fragment {
         viewModel.getDeliveredOrders().observe(getViewLifecycleOwner(), orders -> {
             Log.d("SumaryFragment", "Có " + orders.size() + " đơn hàng");
             adapter.setOrders(orders);
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         // Loading
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+            swipeRefreshLayout.setRefreshing(loading);
         });
 
         // Thông báo lỗi
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), msg -> {
+            swipeRefreshLayout.setRefreshing(false);
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
         });
 
@@ -90,8 +98,15 @@ public class SumaryFragment extends Fragment {
         });
 
         // Phân trang
-        btnNext.setOnClickListener(v -> viewModel.nextPage(LIMIT));
-        btnPrev.setOnClickListener(v -> viewModel.previousPage(LIMIT));
+        btnNext.setOnClickListener(v -> {
+            swipeRefreshLayout.setRefreshing(true); // Optional: hiển thị đang load
+            viewModel.nextPage(LIMIT);
+        });
+
+        btnPrev.setOnClickListener(v -> {
+            swipeRefreshLayout.setRefreshing(true); // Optional: hiển thị đang load
+            viewModel.previousPage(LIMIT);
+        });
 
         return view;
     }
@@ -101,5 +116,8 @@ public class SumaryFragment extends Fragment {
 
         btnPrev.setEnabled(page != null && page > 1);
         btnNext.setEnabled(page != null && totalPages != null && page < totalPages);
+    }
+    private void refreshData() {
+        viewModel.fetchDeliveredOrders(1, LIMIT);
     }
 }

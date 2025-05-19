@@ -79,7 +79,7 @@ public class HistoryOrdersAdapter extends BaseAdapter {
 
         // Order info
         holder.tvOrderId.setText(order.getId());
-        holder.tvShippingAddress.setText(order.getStore().getAddress().getFull_address());
+        holder.tvShippingAddress.setText(order.getShipLocation().getAddress());
 
         // Detail order
         holder.btnDetailOrder.setOnClickListener(v -> {

@@ -22,22 +22,12 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingBottom="8dp">
-
-            <ImageView
-                android:id="@+id/imgStoreAvatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/avatar"
-                android:padding="2dp" />
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_marginStart="10dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
-
                 <TextView
                     android:id="@+id/tvStoreName"
                     android:text="Tên cửa hàng"
@@ -46,7 +36,6 @@
                     android:textColor="#333333"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
                 <TextView
                     android:id="@+id/tvStoreAddress"
                     android:text="Địa chỉ cửa hàng"
@@ -58,46 +47,64 @@
         </LinearLayout>
 
         <!-- User Info -->
-        <TextView
-            android:id="@+id/tvUserInfo"
-            android:text="👤 Nguyễn Văn A - 📞 0123456789"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:textSize="14sp"
-            android:textColor="#444" />
-
-        <!-- Shipping Location -->
-        <TextView
-            android:id="@+id/tvShipLocation"
-            android:text="📍 123 ABC, TP.HCM"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:textSize="14sp"
-            android:textColor="#444" />
-
+            android:gravity="center_vertical"
+            android:paddingBottom="8dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tvUserInfo"
+                    android:text="Tên khách hàng"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tvShipLocation"
+                    android:text="Địa chỉ đưa đồ"
+                    android:textSize="14sp"
+                    android:textColor="#777777"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
         <!-- Payment Method -->
-        <TextView
-            android:id="@+id/tvPaymentMethod"
-            android:text="💳 Thanh toán: COD"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:textSize="14sp"
-            android:textColor="#444" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvPaymentMethod"
+                android:text="💳 Thanh toán: COD"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:textSize="14sp"
+                android:textColor="#444" />
 
-        <!-- Total Money -->
-        <TextView
-            android:id="@+id/tvMoneyTotal"
-            android:text="Tổng tiền: 150.000đ"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="#E91E63"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="6dp"
-            android:paddingBottom="8dp" />
+            <!-- Total Money -->
+            <TextView
+                android:id="@+id/tvMoneyTotal"
+                android:text="150.000đ"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:textColor="#E91E63"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:paddingBottom="8dp" />
+        </LinearLayout>
+
 
         <!-- Action Buttons -->
         <LinearLayout

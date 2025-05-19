@@ -2,6 +2,7 @@ package com.example.ptitdelivery.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,6 @@ public class NewOrderAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_new_order, parent, false);
             holder = new ViewHolder();
-            holder.imgStoreAvatar = convertView.findViewById(R.id.imgStoreAvatar);
             holder.tvStoreName = convertView.findViewById(R.id.tvStoreName);
             holder.tvStoreAddress = convertView.findViewById(R.id.tvStoreAddress);
             holder.tvUserInfo = convertView.findViewById(R.id.tvUserInfo);
@@ -84,20 +84,14 @@ public class NewOrderAdapter extends BaseAdapter {
 
         Order order = orders.get(position);
         // Store info
-        holder.tvStoreName.setText(order.getStore().getName());
+        String displayStoreName = "🔴 " + order.getStore().getName();
+        holder.tvStoreName.setText(displayStoreName);
         holder.tvStoreAddress.setText(order.getStore().getAddress().getFull_address());
-        Glide.with(context)
-                .load(order.getStore().getAvatar().getUrl()  )
-                .placeholder(R.drawable.avatar)
-                .error(R.drawable.avatar)
-                .into(holder.imgStoreAvatar);
 
         // User Info
-        String userInfo = "👤 " +  order.getCustomerName() + " - " + order.getCustomerPhonenumber();
-        holder.tvUserInfo.setText(userInfo);
-
-        // Ship location
-        holder.tvShipLocation.setText("📍 " + order.getStore().getAddress().getFull_address());
+        String displayCustomeInfo = "🟢 " +  order.getCustomerName() + " - " + order.getCustomerPhonenumber();
+        holder.tvUserInfo.setText(displayCustomeInfo);
+        holder.tvShipLocation.setText(order.getStore().getAddress().getFull_address());
 
         // Payment method
         String paymentMethod = order.getPaymentMethod();
@@ -143,7 +137,7 @@ public class NewOrderAdapter extends BaseAdapter {
                         // 👉 Chuyển sang OngoingOrderFragment
                         FragmentManager fragmentManager = fragment.getParentFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragment_container, new OngoingOrderFragment());
+                        transaction.replace(R.id.fragment_new_orders, new OngoingOrderFragment());
                         transaction.addToBackStack(null);
                         transaction.commit();
                     } else {

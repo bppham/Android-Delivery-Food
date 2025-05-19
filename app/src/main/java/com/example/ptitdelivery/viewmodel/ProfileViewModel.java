@@ -27,7 +27,7 @@ public class ProfileViewModel extends ViewModel {
         repository.getShipper(id, shipper, isLoading, errorMessage);
     }
     public void updateShipper(Shipper shipperToUpdate) {
-        repository.updateShipper(shipperToUpdate, shipper, isLoading, errorMessage);
+        repository.updateShipper(shipperToUpdate, shipper, isLoading, errorMessage, isUpdateSuccess);
     }
     public void verifyOldPassword(VerifyOldPasswordRequest request) {
         repository.verifyOldPassword(request, responseChangePassword, isLoading, errorMessage);

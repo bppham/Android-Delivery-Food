@@ -21,7 +21,7 @@ import retrofit2.http.Path;
 public interface ShipperService {
     @GET("shipper/{id}")
     Call<Shipper> getShipper(@Path("id") String id);
-    @PUT("shipper")
+    @PUT("shipper/")
     Call<Shipper> updateShipper(@Body Shipper shipper);
     @POST("shipper/verify-password")
     Call<ChangePasswordResponse> verifyOldPassword(@Body VerifyOldPasswordRequest request);

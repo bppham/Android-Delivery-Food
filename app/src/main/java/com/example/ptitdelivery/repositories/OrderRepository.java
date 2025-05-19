@@ -54,9 +54,9 @@ public class OrderRepository {
         });
     }
     public void acceptOrder(String orderId, MutableLiveData<Boolean> isAccepted, MutableLiveData<String> errorMessage) {
-        orderService.acceptOrder(orderId).enqueue(new Callback<OrderResponse>() {
+        orderService.acceptOrder(orderId).enqueue(new Callback<SingleOrderResponse>() {
             @Override
-            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+            public void onResponse(Call<SingleOrderResponse> call, Response<SingleOrderResponse> response) {
                 if (response.isSuccessful()) {
                     isAccepted.setValue(true);
                 } else {
@@ -66,7 +66,7 @@ public class OrderRepository {
             }
 
             @Override
-            public void onFailure(Call<OrderResponse> call, Throwable t) {
+            public void onFailure(Call<SingleOrderResponse> call, Throwable t) {
                 errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
                 isAccepted.setValue(false);
             }

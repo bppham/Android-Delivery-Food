@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.adapter.NewOrderAdapter;
@@ -22,15 +23,20 @@ import com.example.ptitdelivery.viewmodel.NewOrdersViewModel;
 public class NewOrdersFragment extends Fragment {
     private static final String TAG = "NewOrdersFragment";
     private NewOrdersViewModel viewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ListView lvOrders;
-    private ProgressBar progressBar;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view;
         view = inflater.inflate(R.layout.fragment_new_orders, container, false);
         lvOrders = view.findViewById(R.id.lvOrders);
-        progressBar = view.findViewById(R.id.progressBar);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
+        swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> {
+            return lvOrders != null && lvOrders.canScrollVertically(-1);
+        });
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
@@ -42,21 +48,34 @@ public class NewOrdersFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(NewOrdersViewModel.class);
         viewModel.init(token); // Truyền token khi init ViewModel
+        swipeRefreshLayout.setRefreshing(true);
         viewModel.fetchOrders();
 
         viewModel.getOrders().observe(getViewLifecycleOwner(), orders -> {
-            NewOrderAdapter adapter = new NewOrderAdapter(requireContext(), orders, this);
-            lvOrders.setAdapter(adapter);
+            if (orders != null && !orders.isEmpty()) {
+                NewOrderAdapter adapter = new NewOrderAdapter(requireContext(), orders, this);
+                lvOrders.setAdapter(adapter);
+            } else {
+                Log.d(TAG, "Không có đơn hàng nào."); // Hoặc show "trạng thái trống" nếu cần
+                lvOrders.setAdapter(null); // Clear nếu cần
+            }
         });
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+            // Điều khiển hiển thị loading của SwipeRefreshLayout
+            swipeRefreshLayout.setRefreshing(loading);
         });
 
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), msg -> {
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+            // Nếu có lỗi thì tắt loading luôn
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         return view;
+    }
+
+    private void refreshData() {
+        viewModel.fetchOrders();
     }
 }

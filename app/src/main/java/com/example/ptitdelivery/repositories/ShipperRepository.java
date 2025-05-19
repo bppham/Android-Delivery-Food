@@ -47,9 +47,13 @@ public class ShipperRepository {
         });
     }
 
-    public void updateShipper(Shipper shipperToUpdate, MutableLiveData<Shipper> shipper,
-                              MutableLiveData<Boolean> isLoading,
-                              MutableLiveData<String> errorMessage) {
+    public void updateShipper(
+            Shipper shipperToUpdate,
+            MutableLiveData<Shipper> shipper,
+            MutableLiveData<Boolean> isLoading,
+            MutableLiveData<String> errorMessage,
+            MutableLiveData<Boolean> isUpdateSuccess) {
+
         isLoading.setValue(true);
         shipperService.updateShipper(shipperToUpdate).enqueue(new Callback<Shipper>() {
             @Override
@@ -57,8 +61,10 @@ public class ShipperRepository {
                 isLoading.setValue(false);
                 if (response.isSuccessful() && response.body() != null) {
                     shipper.setValue(response.body());
+                    isUpdateSuccess.setValue(true);
                 } else {
                     errorMessage.setValue("Không thể cập nhật thông tin shipper");
+                    isUpdateSuccess.setValue(false);
                 }
             }
 
@@ -66,6 +72,7 @@ public class ShipperRepository {
             public void onFailure(Call<Shipper> call, Throwable t) {
                 isLoading.setValue(false);
                 errorMessage.setValue("Lỗi kết nối: " + t.getMessage());
+                isUpdateSuccess.setValue(false);
             }
         });
     }
