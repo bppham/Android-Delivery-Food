@@ -1,5 +1,7 @@
 package com.example.ptitdelivery.activities;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.ptitdelivery.R;
+import com.example.ptitdelivery.broadcast.InternetBroadcastReceiver;
 import com.example.ptitdelivery.viewPagerAdapters.ViewPagerAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -18,12 +21,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private ViewPager mViewPager;
     private BottomNavigationView mBottomNavigationView;
+    private InternetBroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        broadcastReceiver = new InternetBroadcastReceiver();
 
         toolbarTitle = findViewById(R.id.toolbar_title);
         mViewPager = findViewById(R.id.view_pager);
@@ -81,5 +86,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

@@ -1,144 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:card_view="http://schemas.android.com/tools"
-    android:layout_margin="8dp"
-    card_view:cardCornerRadius="12dp"
-    card_view:cardElevation="4dp"
-    android:background="#F8F8F8">
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    android:background="@drawable/card_border"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginBottom="8dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <!-- Store Info -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginStart="10dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/tvStoreName"
-                    android:text="Tên cửa hàng"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#333333"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tvStoreAddress"
-                    android:text="Địa chỉ cửa hàng"
-                    android:textSize="14sp"
-                    android:textColor="#777777"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+            android:orientation="vertical"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvStoreName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên cửa hàng"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="#212121" />
+
+            <TextView
+                android:id="@+id/tvStoreAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Địa chỉ cửa hàng"
+                android:textSize="14sp"
+                android:textColor="#757575" />
         </LinearLayout>
 
         <!-- User Info -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginStart="10dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/tvUserInfo"
-                    android:text="Tên khách hàng"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:textColor="#333333"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/tvShipLocation"
-                    android:text="Địa chỉ đưa đồ"
-                    android:textSize="14sp"
-                    android:textColor="#777777"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+            android:orientation="vertical"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvUserInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên khách hàng"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="#212121" />
+
+            <TextView
+                android:id="@+id/tvShipLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Địa chỉ đưa đồ"
+                android:textSize="14sp"
+                android:textColor="#757575" />
         </LinearLayout>
-        <!-- Payment Method -->
+
+        <!-- Payment + Total -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp">
+
             <TextView
                 android:id="@+id/tvPaymentMethod"
-                android:text="💳 Thanh toán: COD"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
+                android:text="💳 Thanh toán: COD"
                 android:textSize="14sp"
-                android:textColor="#444" />
+                android:textColor="#424242" />
 
-            <!-- Total Money -->
             <TextView
                 android:id="@+id/tvMoneyTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="150.000đ"
                 android:textStyle="bold"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:textColor="#E91E63"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="6dp"
-                android:paddingBottom="8dp" />
+                android:textSize="16sp"
+                android:textColor="#D81B60" />
         </LinearLayout>
-
 
         <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
             android:orientation="horizontal"
+            android:gravity="end"
             android:layout_marginTop="4dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAcceptOrder"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:backgroundTint="@color/green_2"
-                android:contentDescription="Chi tiết"
-                android:padding="8dp"
                 android:text="Nhận đơn"
-                android:textSize="12sp"
-                app:cornerRadius="8dp"
-                android:layout_marginRight="20dp"
-                android:textStyle="bold"/>
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_marginEnd="12dp"
+                app:cornerRadius="10dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewDetails"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:backgroundTint="@color/blue"
-                android:contentDescription=""
-                android:padding="12sp"
                 android:text="Chi tiết"
-                app:cornerRadius="8dp"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
-
+                android:textSize="14sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                app:cornerRadius="10dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

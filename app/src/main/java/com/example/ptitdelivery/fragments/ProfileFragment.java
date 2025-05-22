@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "Profile Fragment";
     private ProfileViewModel viewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ScrollView scrollView;
     private ImageView ivProfileAvatar, ivEditIcon;
     private TextView tvEmail, tvName, tvGender, tvPhoneNumber, tvVehicleName, tvVehicleNumber;
     private Button btnLogout;
@@ -68,6 +70,10 @@ public class ProfileFragment extends Fragment {
         View view;
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        scrollView = view.findViewById(R.id.scrollView2);
+        swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> {
+            return scrollView.getScrollY() > 0;
+        });
         ivProfileAvatar = view.findViewById(R.id.iv_profile_image);
         tvEmail = view.findViewById(R.id.tv_profile_email);
         tvName = view.findViewById(R.id.tv_profile_name);

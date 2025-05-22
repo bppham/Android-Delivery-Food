@@ -28,7 +28,9 @@ import com.example.ptitdelivery.utils.ConvertString;
 import com.example.ptitdelivery.utils.DialogHelper;
 import com.example.ptitdelivery.viewmodel.NewOrdersViewModel;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class NewOrderAdapter extends BaseAdapter {
     private Context context;
@@ -91,7 +93,7 @@ public class NewOrderAdapter extends BaseAdapter {
         // User Info
         String displayCustomeInfo = "🟢 " +  order.getCustomerName() + " - " + order.getCustomerPhonenumber();
         holder.tvUserInfo.setText(displayCustomeInfo);
-        holder.tvShipLocation.setText(order.getStore().getAddress().getFull_address());
+        holder.tvShipLocation.setText(order.getShipLocation().getAddress());
 
         // Payment method
         String paymentMethod = order.getPaymentMethod();
@@ -109,7 +111,9 @@ public class NewOrderAdapter extends BaseAdapter {
             }
             totalMoney += (dishPrice + toppingPrice) * item.getQuantity();
         }
-        holder.tvMoneyTotal.setText(totalMoney + " VND");
+
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        holder.tvMoneyTotal.setText(formatter.format(totalMoney) + " VND");
 
         holder.btnViewDetails.setOnClickListener(v -> {
             Intent intent = new Intent(context, OrderDetailActivity.class);

@@ -15,7 +15,8 @@
         android:background="@color/white"
         app:tabIndicatorColor="@color/cardview_dark_background"
         app:tabTextColor="@android:color/black"
-        app:tabSelectedTextColor="@color/cardview_dark_background"/>
+        app:tabSelectedTextColor="@color/cardview_dark_background"
+        android:layout_marginBottom="16dp"/>
 
     <!-- ViewPager2 để hiển thị nội dung từng tab -->
     <androidx.viewpager.widget.ViewPager

@@ -2,7 +2,11 @@ package com.example.ptitdelivery.activities;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -37,6 +42,7 @@ import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.network.SocketManager;
 import com.example.ptitdelivery.viewmodel.OrderViewModel;
 import com.example.ptitdelivery.viewmodel.RoutingOrderViewModel;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -51,6 +57,10 @@ import java.util.ArrayList;
 import java.util.List;
 import com.example.ptitdelivery.R;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.Task;
 
 public class SeeRouteToCustomerActivity extends AppCompatActivity implements MapEventsReceiver{
     private MapView mapView;
@@ -67,6 +77,7 @@ public class SeeRouteToCustomerActivity extends AppCompatActivity implements Map
     private Polyline storePolyline;
     private Polyline customerPolyline;
     private Toolbar toolbar;
+    private static final int REQUEST_CHECK_SETTINGS = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +100,7 @@ public class SeeRouteToCustomerActivity extends AppCompatActivity implements Map
         if (token == null) {
             Log.e(TAG, "Không tìm thấy token");
         }
+        checkGpsAndRequestIfDisabled();
         viewModel = new ViewModelProvider(this).get(OrderViewModel.class);
         viewModel.init(token);
 
@@ -153,6 +165,46 @@ public class SeeRouteToCustomerActivity extends AppCompatActivity implements Map
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        }
+    }
+
+    private void checkGpsAndRequestIfDisabled() {
+        LocationRequest locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(locationSettingsResponse -> {
+            // GPS đã bật, làm gì tiếp thì làm (ví dụ gọi lấy location)
+        });
+
+        task.addOnFailureListener(e -> {
+            if (e instanceof ResolvableApiException) {
+                try {
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(this, REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException sendEx) {
+                    // Xử lý lỗi nếu cần
+                }
+            } else {
+                Toast.makeText(this, "Vui lòng bật GPS để sử dụng chức năng", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == RESULT_OK) {
+                // Người dùng đã bật GPS, làm gì tiếp thì làm
+            } else {
+                Toast.makeText(this, "Bạn cần bật định vị để sử dụng", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -319,15 +371,15 @@ public class SeeRouteToCustomerActivity extends AppCompatActivity implements Map
                         }
 
                         runOnUiThread(() -> {
-                            if (storePolyline != null) {
-                                mapView.getOverlays().remove(storePolyline);
+                            if (customerPolyline != null) {
+                                mapView.getOverlays().remove(customerPolyline);
                             }
 
-                            storePolyline = new Polyline();
-                            storePolyline.setPoints(geoPoints);
-                            storePolyline.setColor(Color.RED);
-                            storePolyline.setWidth(5f);
-                            mapView.getOverlays().add(storePolyline);
+                            customerPolyline = new Polyline();
+                            customerPolyline.setPoints(geoPoints);
+                            customerPolyline.setColor(Color.RED);
+                            customerPolyline.setWidth(5f);
+                            mapView.getOverlays().add(customerPolyline);
                             mapView.invalidate();
                         });
                     }
