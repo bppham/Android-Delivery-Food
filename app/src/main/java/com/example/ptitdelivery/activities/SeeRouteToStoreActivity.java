@@ -91,22 +91,12 @@ public class SeeRouteToStoreActivity extends AppCompatActivity implements MapEve
         toolbar.setNavigationOnClickListener(v -> {
             finish();
         });
-
         order = (Order) getIntent().getSerializableExtra("order");
         orderId = order.getId();
-
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-        }
         checkGpsAndRequestIfDisabled();
         viewModel = new ViewModelProvider(this).get(OrderViewModel.class);
-        viewModel.init(token);
 
         routingViewModel = new ViewModelProvider(this).get(RoutingOrderViewModel.class);
-        routingViewModel.init(token);
         routingViewModel.getDetailOrder(orderId);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);

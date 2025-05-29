@@ -99,19 +99,10 @@ public class OngoingOrderFragment extends Fragment {
         btnNextStep3 = view.findViewById(R.id.btnNextStep3);
         btnDetailOrderStep3 = view.findViewById(R.id.btnDetailOrderStep3);
 
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-            return view;
-        }
         viewModel = new ViewModelProvider(this).get(OngoingOrderViewModel.class);
-        viewModel.init(token);
         swipeRefreshLayout.setRefreshing(true);
         viewModel.getTakenOrder();
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
-        chatViewModel.init(token);
 
         chatViewModel.getCreateChatResponse().observe(getViewLifecycleOwner(), new Observer<Resource<String>>() {
             @Override

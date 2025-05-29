@@ -49,17 +49,7 @@ public class SumaryFragment extends Fragment {
             return gvOrders != null && gvOrders.canScrollVertically(-1);
         });
 
-
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-            return view;
-        }
-
         viewModel = new ViewModelProvider(this).get(DeliveredOrdersViewModel.class);
-        viewModel.init(token);
         // Tạo adapter một lần
         adapter = new HistoryOrdersAdapter(requireContext(), new ArrayList<>());
         gvOrders.setAdapter(adapter);

@@ -58,18 +58,8 @@ public class UpdatePersonalInfo extends AppCompatActivity {
         } else {
             Log.d(TAG, "onCreate: shipper is null");
         }
-
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-        }
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        viewModel.init(token);
-
         action();
-
     }
     private void showInformatioin(Shipper shipper){
         edtPhonenumber.setText(shipper.getPhonenumber());

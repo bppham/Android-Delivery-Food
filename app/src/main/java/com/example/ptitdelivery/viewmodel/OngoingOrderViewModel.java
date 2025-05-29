@@ -5,18 +5,21 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.ptitdelivery.model.Order.Order;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.repositories.OrderRepository;
 
 public class OngoingOrderViewModel extends ViewModel {
+    private OrderRepository repository;
+    public OngoingOrderViewModel() {
+        if (!AuthRetrofitFactory.isInitialized()) {
+            throw new IllegalStateException("AuthRetrofitFactory chưa được khởi tạo! Phải login trước.");
+        }
+        this.repository = new OrderRepository();
+    }
     private final MutableLiveData<Order> takenOrder = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<Order> updatedOrder = new MutableLiveData<>();
-    private OrderRepository repository;
-    // method
-    public void init(String token) {
-        repository = new OrderRepository(token);
-    }
     public void getTakenOrder() {
         repository.getTakenOrder(takenOrder, errorMessage, isLoading);
     }

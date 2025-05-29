@@ -4,13 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ptitdelivery.model.Image;
-import com.example.ptitdelivery.network.ApiClient;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.network.service.UploadService;
 import com.example.ptitdelivery.utils.Resource;
 
@@ -25,14 +24,15 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class UploadRepository {
     private final UploadService uploadService;
 
-    public UploadRepository(String token) {
-        this.uploadService = ApiClient.getClient(token).create(UploadService.class);
+    public UploadRepository() {
+        Retrofit retrofit = AuthRetrofitFactory.getInstance().createClient();
+        this.uploadService = retrofit.create(UploadService.class);
     }
-
 
     public LiveData<Resource<String>> uploadAvatar(Uri imageUri, Context context) {
         MutableLiveData<Resource<String>> result = new MutableLiveData<>();

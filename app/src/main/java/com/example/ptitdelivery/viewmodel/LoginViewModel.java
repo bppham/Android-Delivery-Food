@@ -9,13 +9,11 @@ import com.example.ptitdelivery.repositories.AuthRepository;
 
 public class LoginViewModel extends ViewModel {
     private final AuthRepository repository;
-    private final MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
-    private final MutableLiveData<String> loginError = new MutableLiveData<>();
-
     public LoginViewModel(AuthRepository repository) {
         this.repository = repository;
     }
-
+    private final MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
+    private final MutableLiveData<String> loginError = new MutableLiveData<>();
     public void login(String email, String password) {
         repository.login(email, password, new AuthRepository.LoginCallback() {
             @Override

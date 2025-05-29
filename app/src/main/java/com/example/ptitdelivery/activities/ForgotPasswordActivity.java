@@ -32,7 +32,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         btnForgetPasswordNext = findViewById(R.id.btn_forget_password_next);
         btnReturn = findViewById(R.id.btn_forget_password_return);
         edtEmail = findViewById(R.id.edt_forget_password_email);
-
         viewModel = new ViewModelProvider(this).get(ForgetPasswordViewModel.class);
         observeViewModel();
         action();

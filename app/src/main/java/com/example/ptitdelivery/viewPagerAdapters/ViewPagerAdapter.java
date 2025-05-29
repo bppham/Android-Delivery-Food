@@ -3,12 +3,10 @@ package com.example.ptitdelivery.viewPagerAdapters;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.ptitdelivery.fragments.ChatFragment;
 import com.example.ptitdelivery.fragments.OrderFragment;
-import com.example.ptitdelivery.fragments.PolicyFragment;
 import com.example.ptitdelivery.fragments.ProfileFragment;
 import com.example.ptitdelivery.fragments.SumaryFragment;
 

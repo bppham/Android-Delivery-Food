@@ -8,21 +8,25 @@ import com.example.ptitdelivery.model.ChangePassword.ChangePasswordResponse;
 import com.example.ptitdelivery.model.ChangePassword.ResetPasswordRequest;
 import com.example.ptitdelivery.model.ChangePassword.VerifyOldPasswordRequest;
 import com.example.ptitdelivery.model.Shipper.Shipper;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.repositories.ShipperRepository;
 
 import java.io.File;
 
 public class ProfileViewModel extends ViewModel {
+    private ShipperRepository repository;
+    public ProfileViewModel() {
+        if (!AuthRetrofitFactory.isInitialized()) {
+            throw new IllegalStateException("AuthRetrofitFactory chưa được khởi tạo! Phải login trước.");
+        }
+        this.repository = new ShipperRepository();
+    }
     private final MutableLiveData<Shipper> shipper = new MutableLiveData<>();
     private final MutableLiveData<ChangePasswordResponse> responseChangePassword = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isUpdateSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> imageUrl = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    private ShipperRepository repository;
-    public void init(String token) {
-        repository = new ShipperRepository(token);
-    }
     public void getShipper(String id) {
         repository.getShipper(id, shipper, isLoading, errorMessage);
     }

@@ -29,7 +29,6 @@ public class CheckOTPViewModel extends ViewModel {
                     errorMessage.setValue("OTP không hợp lệ");
                 }
             }
-
             @Override
             public void onFailure(Call<CheckOTPResponse> call, Throwable t) {
                 errorMessage.setValue(t.getMessage());

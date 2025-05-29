@@ -37,17 +37,7 @@ public class NewOrdersFragment extends Fragment {
         swipeRefreshLayout.setOnChildScrollUpCallback((parent, child) -> {
             return lvOrders != null && lvOrders.canScrollVertically(-1);
         });
-
-        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-            return view;
-        }
-
         viewModel = new ViewModelProvider(this).get(NewOrdersViewModel.class);
-        viewModel.init(token); // Truyền token khi init ViewModel
         swipeRefreshLayout.setRefreshing(true);
         viewModel.fetchOrders();
 

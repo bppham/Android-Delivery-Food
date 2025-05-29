@@ -1,7 +1,5 @@
 package com.example.ptitdelivery.activities;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,25 +7,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
 import com.example.ptitdelivery.model.Shipper.ShipperRegisterRequest;
 import com.example.ptitdelivery.model.Vehicle;
-import com.example.ptitdelivery.network.ApiClient;
-import com.example.ptitdelivery.network.service.AuthService;
-import com.example.ptitdelivery.repositories.AuthRepository;
 import com.example.ptitdelivery.utils.DialogHelper;
-import com.example.ptitdelivery.viewmodel.LoginViewModel;
 import com.example.ptitdelivery.viewmodel.RegisterViewModel;
 
 public class RegisterActivity extends AppCompatActivity {

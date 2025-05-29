@@ -1,6 +1,5 @@
 package com.example.ptitdelivery.repositories;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -10,11 +9,9 @@ import com.example.ptitdelivery.model.ApiResponse;
 import com.example.ptitdelivery.model.Chat.Chat;
 import com.example.ptitdelivery.model.Chat.Message;
 import com.example.ptitdelivery.model.Chat.MessageResponse;
-import com.example.ptitdelivery.network.ApiClient;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.network.service.ChatService;
-import com.example.ptitdelivery.network.service.NotificationService;
 import com.example.ptitdelivery.utils.Resource;
-import com.example.ptitdelivery.utils.SharedPreferencesHelper;
 
 import org.json.JSONObject;
 
@@ -25,11 +22,13 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ChatRepository {
     private final ChatService chatService;
-    public ChatRepository(String token) {
-        this.chatService = ApiClient.getClient(token).create(ChatService.class);
+    public ChatRepository() {
+        Retrofit retrofit = AuthRetrofitFactory.getInstance().createClient();
+        this.chatService = retrofit.create(ChatService.class);
     }
 
     public LiveData<Resource<String>> createChat(String id, String storeId) {

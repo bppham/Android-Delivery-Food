@@ -9,6 +9,7 @@ import com.example.ptitdelivery.model.ApiResponse;
 import com.example.ptitdelivery.model.Chat.Chat;
 import com.example.ptitdelivery.model.Chat.Message;
 import com.example.ptitdelivery.model.Chat.MessageResponse;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.repositories.ChatRepository;
 import com.example.ptitdelivery.utils.Resource;
 
@@ -16,11 +17,12 @@ import java.util.List;
 import java.util.Map;
 public class ChatViewModel extends ViewModel {
     private ChatRepository repository;
-
-    public void init(String token) {
-        repository = new ChatRepository(token);
+    public ChatViewModel() {
+        if (!AuthRetrofitFactory.isInitialized()) {
+            throw new IllegalStateException("AuthRetrofitFactory chưa được khởi tạo! Phải login trước.");
+        }
+        this.repository = new ChatRepository();
     }
-
     private final MutableLiveData<Resource<String>> createChatResponse = new MutableLiveData<Resource<String>>();
     public LiveData<Resource<String>> getCreateChatResponse() {
         return createChatResponse;

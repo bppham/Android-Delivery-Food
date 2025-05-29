@@ -7,7 +7,7 @@ import com.example.ptitdelivery.model.ChangePassword.ChangePasswordResponse;
 import com.example.ptitdelivery.model.ChangePassword.ResetPasswordRequest;
 import com.example.ptitdelivery.model.ChangePassword.VerifyOldPasswordRequest;
 import com.example.ptitdelivery.model.Shipper.Shipper;
-import com.example.ptitdelivery.network.ApiClient;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.network.service.ShipperService;
 
 import java.io.File;
@@ -19,11 +19,13 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ShipperRepository {
     private final ShipperService shipperService;
-    public ShipperRepository(String token) {
-        this.shipperService = ApiClient.getClient(token).create(ShipperService.class);
+    public ShipperRepository() {
+        Retrofit retrofit = AuthRetrofitFactory.getInstance().createClient();
+        this.shipperService = retrofit.create(ShipperService.class);
     }
     public void getShipper(String id, MutableLiveData<Shipper> shipper, MutableLiveData<Boolean> isLoading, MutableLiveData<String> errorMessage) {
         isLoading.setValue(true);

@@ -10,7 +10,7 @@ import com.example.ptitdelivery.model.DeliveredOrderResponse;
 import com.example.ptitdelivery.model.Order.Order;
 import com.example.ptitdelivery.model.Order.OrderResponse;
 import com.example.ptitdelivery.model.Order.SingleOrderResponse;
-import com.example.ptitdelivery.network.ApiClient;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.network.service.OrderService;
 import com.example.ptitdelivery.utils.Resource;
 
@@ -23,12 +23,14 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class OrderRepository {
     private final OrderService orderService;
 
-    public OrderRepository(String token) {
-        this.orderService = ApiClient.getClient(token).create(OrderService.class);
+    public OrderRepository() {
+        Retrofit retrofit = AuthRetrofitFactory.getInstance().createClient();
+        this.orderService = retrofit.create(OrderService.class);
     }
     public void getOrders(MutableLiveData<List<Order>> orders,
                           MutableLiveData<Boolean> isLoading,

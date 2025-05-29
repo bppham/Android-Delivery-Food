@@ -14,12 +14,9 @@ import retrofit2.Response;
 
 public class RegisterViewModel extends ViewModel {
     private AuthRepository repository;
-
     public RegisterViewModel() {
         this.repository = new AuthRepository();
     }
-
-
     private final MutableLiveData<ShipperRegisterResponse> registerResponse = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 

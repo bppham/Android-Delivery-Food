@@ -51,14 +51,8 @@ public class ChatFragment extends Fragment {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", getContext().MODE_PRIVATE);
         String token = sharedPreferences.getString("token", null);
         shipper_id = sharedPreferences.getString("id", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-            return view;
-        }
         SocketManager.connectSocket(requireContext());
         chatViewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
-        chatViewModel.init(token);
         setupUserChat();
 
         chatViewModel.getDeleteChatResponse().observe(getViewLifecycleOwner(), new Observer<Resource<ApiResponse<String>>>() {

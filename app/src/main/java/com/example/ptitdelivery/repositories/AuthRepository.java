@@ -1,7 +1,5 @@
 package com.example.ptitdelivery.repositories;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.ptitdelivery.model.CheckOTP.CheckOTPRequest;
 import com.example.ptitdelivery.model.CheckOTP.CheckOTPResponse;
 import com.example.ptitdelivery.model.ForgetPassword.ForgetPasswordRequest;
@@ -12,19 +10,22 @@ import com.example.ptitdelivery.model.ResetPassword.ResetPasswordRequest;
 import com.example.ptitdelivery.model.ResetPassword.ResetPasswordResponse;
 import com.example.ptitdelivery.model.Shipper.ShipperRegisterRequest;
 import com.example.ptitdelivery.model.Shipper.ShipperRegisterResponse;
-import com.example.ptitdelivery.network.ApiClient;
+import com.example.ptitdelivery.network.retrofit.NoAuthRetrofitFactory;
+import com.example.ptitdelivery.network.retrofit.RetrofitFactory;
 import com.example.ptitdelivery.network.service.AuthService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class AuthRepository {
     private final AuthService authService;
 
     public AuthRepository() {
-        // Khởi tạo AuthService bằng Retrofit
-        authService = ApiClient.getClient().create(AuthService.class);
+        RetrofitFactory factory = NoAuthRetrofitFactory.getInstance();
+        Retrofit retrofit = factory.createClient();
+        this.authService = retrofit.create(AuthService.class);
     }
 
     public void login(String email, String password, LoginCallback callback){

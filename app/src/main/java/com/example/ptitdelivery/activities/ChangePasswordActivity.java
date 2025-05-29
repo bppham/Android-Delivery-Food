@@ -48,15 +48,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             finish();
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-        }
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        viewModel.init(token);
-
         observerViewModel();
         action();
     }
@@ -84,7 +76,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             }
         });
-
         // Quan sát lỗi kết nối hoặc lỗi trả về từ API
         viewModel.getErrorMessageLiveData().observe(this, new Observer<String>() {
             @Override
@@ -94,7 +85,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             }
         });
-
         // Quan sát trạng thái loading
         viewModel.getIsLoadingLiveData().observe(this, new Observer<Boolean>() {
             @Override
@@ -112,7 +102,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
             }
         });
     }
-
     public void action() {
         btnConfirm.setOnClickListener(view -> {
             String oldPassword = edtOldPassword.getText().toString();
@@ -140,7 +129,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
             viewModel.verifyOldPassword(verifyOldPasswordRequest);
         });
     }
-
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

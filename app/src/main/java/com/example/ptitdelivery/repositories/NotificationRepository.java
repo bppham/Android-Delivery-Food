@@ -7,10 +7,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.ptitdelivery.model.ApiResponse;
 import com.example.ptitdelivery.model.Notification;
-import com.example.ptitdelivery.network.ApiClient;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.network.service.NotificationService;
 import com.example.ptitdelivery.utils.Resource;
-import com.example.ptitdelivery.utils.SharedPreferencesHelper;
 
 import org.json.JSONObject;
 
@@ -19,11 +18,13 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class NotificationRepository {
     private final NotificationService notificationService;
-    public NotificationRepository(String token) {
-        this.notificationService = ApiClient.getClient(token).create(NotificationService.class);
+    public NotificationRepository() {
+        Retrofit retrofit = AuthRetrofitFactory.getInstance().createClient();
+        this.notificationService = retrofit.create(NotificationService.class);
     }
 
     public LiveData<com.example.ptitdelivery.utils.Resource<ApiResponse<List<Notification>>>> getAllNotifications() {

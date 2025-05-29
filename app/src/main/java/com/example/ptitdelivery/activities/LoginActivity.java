@@ -18,13 +18,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ptitdelivery.R;
-import com.example.ptitdelivery.network.ApiClient;
-import com.example.ptitdelivery.network.service.AuthService;
+import com.example.ptitdelivery.network.retrofit.AuthRetrofitFactory;
 import com.example.ptitdelivery.repositories.AuthRepository;
 import com.example.ptitdelivery.viewmodel.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
-
     private Button btnLogin, btnFingerprint;
     private EditText edtLoginEmail, edtLoginPassword;
     private TextView tvRegister, tvForgotPassword;
@@ -56,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         observeLogin();
         action();
     }
-
     private void observeLogin() {
         loginViewModel.getLoginResponse().observe(this, loginResponse -> {
             Log.d("DEBUG_LOGIN", "LoginResponse: token=" + loginResponse.getToken()
@@ -68,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("email", loginResponse.getEmail());
             editor.putString("id", loginResponse.get_id());
             editor.apply();
-
+            AuthRetrofitFactory.init("Bearer " + loginResponse.getToken());
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("TOKEN", loginResponse.getToken());
             startActivity(intent);
@@ -79,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
         });
     }
-
     public void action() {
         btnLogin.setOnClickListener(view -> {
             String email = edtLoginEmail.getText().toString();
@@ -112,9 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Bạn chưa đăng nhập để lưu thông tin vân tay", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
-
     private void maybeLoginWithFingerprint() {
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String savedToken = sharedPreferences.getString("token", null);
@@ -150,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                         super.onAuthenticationSucceeded(result);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("TOKEN", savedToken.replace("Bearer ", ""));
+                        AuthRetrofitFactory.init(savedToken);
                         startActivity(intent);
                         finish();
                     }
@@ -169,6 +164,4 @@ public class LoginActivity extends AppCompatActivity {
 
         biometricPrompt.authenticate(promptInfo);
     }
-
-
 };

@@ -91,14 +91,6 @@ public class ProfileFragment extends Fragment {
         // Lấy ID & Token từ SharedPreferences
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         userId  = sharedPreferences.getString("id", null);
-        String token = sharedPreferences.getString("token", null);
-
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-            return view;
-        }
-
         swipeRefreshLayout.setOnRefreshListener(this::refreshData);
 
         imagePickerLauncher = registerForActivityResult(
@@ -113,9 +105,7 @@ public class ProfileFragment extends Fragment {
                 }
         );
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        viewModel.init(token);
         viewModel.getShipper(userId );
-
         observeViewModel();
         action();
         logout(sharedPreferences);

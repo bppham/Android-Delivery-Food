@@ -86,14 +86,7 @@ public class DetailMessageActivity extends AppCompatActivity {
         uploadViewModel = new ViewModelProvider(this).get(UploadViewModel.class);
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
         shipper_id = sharedPreferences.getString("id", null);
-        Log.d(TAG, "Stored Token: " + token);
-        if (token == null) {
-            Log.e(TAG, "Không tìm thấy token");
-        }
-        chatViewModel.init(token);
-        uploadViewModel.init(token);
         swipeRefreshLayout.setOnRefreshListener(this::refreshData);
         setupAllMessages();
 
@@ -323,14 +316,12 @@ public class DetailMessageActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         startActivityForResult(Intent.createChooser(intent, "Chọn 1 ảnh"), PICK_IMAGES_REQUEST);
     }
-
     public void goBack(View view) {
         finish();
     }
