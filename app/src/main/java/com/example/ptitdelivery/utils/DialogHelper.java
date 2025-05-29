@@ -3,31 +3,35 @@ package com.example.ptitdelivery.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 
+import com.example.ptitdelivery.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 public class DialogHelper {
     public static void showErrorDialog(Context context, String message) {
-        new AlertDialog.Builder(context)
-                .setTitle("❌ Lỗi")
+        new MaterialAlertDialogBuilder(context)
+                .setTitle("Lỗi")
                 .setMessage(message)
+                .setIcon(R.drawable.ic_error) // Bạn có thể tùy chỉnh icon
                 .setPositiveButton("OK", null)
                 .setCancelable(true)
                 .show();
     }
 
-    // ✅ Dialog thành công
     public static void showSuccessDialog(Context context, String message) {
-        new AlertDialog.Builder(context)
-                .setTitle("✅ Thành công")
+        new MaterialAlertDialogBuilder(context)
+                .setTitle("Thành công")
                 .setMessage(message)
+                .setIcon(R.drawable.ic_success) // Tùy chỉnh nếu muốn
                 .setPositiveButton("OK", null)
                 .setCancelable(true)
                 .show();
     }
 
-    // ❓ Dialog xác nhận - có callback
     public static void showConfirmDialog(Context context, String message, ConfirmCallback callback) {
-        new AlertDialog.Builder(context)
-                .setTitle("❓ Bạn có chắc không?")
+        new MaterialAlertDialogBuilder(context)
+                .setTitle("Xác nhận")
                 .setMessage(message)
+                .setIcon(R.drawable.ic_question) // Optional icon
                 .setPositiveButton("Có", (dialog, which) -> {
                     if (callback != null) {
                         callback.onConfirmed();
@@ -38,7 +42,6 @@ public class DialogHelper {
                 .show();
     }
 
-    // Giao diện callback cho confirm
     public interface ConfirmCallback {
         void onConfirmed();
     }

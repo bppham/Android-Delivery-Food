@@ -51,7 +51,7 @@ public class OngoingOrderFragment extends Fragment {
     // Step 1
     private CardView cvStep1;
     private TextView tvStoreName, tvStoreAddress, tvOrderStatus;
-    private Button btnNextStep1, btnDetailOrderStep1, btnShowDirectionStep1, btnChatWithStore;
+    private Button btnNextStep1, btnDetailOrderStep1, btnShowDirectionStep1, btnChatWithStore, btnCancelOrder;
     // Step 2
     private CardView cvStep2;
     private TextView tvUserName, tvShippingAddress, tvUserPhoneNumber, tvPaymentMethod;
@@ -82,6 +82,8 @@ public class OngoingOrderFragment extends Fragment {
         btnDetailOrderStep1 = view.findViewById(R.id.btnDetailOrderStep1);
         btnShowDirectionStep1 = view.findViewById(R.id.btnShowDirectionStep1);
         btnChatWithStore = view.findViewById(R.id.btnChatWithStore);
+        btnCancelOrder = view.findViewById(R.id.btnCancelDeliveringOrder);
+
         // Step 2
         cvStep2 = view.findViewById(R.id.cv_ongoing_order_step_2);
         tvUserName = view.findViewById(R.id.tv_ongoing_order_user_name);
@@ -195,7 +197,7 @@ public class OngoingOrderFragment extends Fragment {
                 Toast.makeText(getContext(), "Cập nhật trạng thái thành công", Toast.LENGTH_SHORT).show();
 
                 // 👉 Nếu đơn đã hoàn thành, gọi lại getTakenOrder() để load đơn mới
-                if ("done".equals(updatedOrder.getStatus())) {
+                if ("done".equals(updatedOrder.getStatus()) || "finished".equals(updatedOrder.getStatus())) {
                     noOrderLayout.setVisibility(View.VISIBLE);
                     hasOrderLayout.setVisibility(View.GONE);
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -229,6 +231,13 @@ public class OngoingOrderFragment extends Fragment {
         });
         btnChatWithStore.setOnClickListener(view -> {
             chatViewModel.createChat(order.getStore().getOwner(), order.getStore().getId());
+        });
+        btnCancelOrder.setOnClickListener(v -> {
+            if (order != null) {
+                DialogHelper.showConfirmDialog(requireContext(), "Bạn có chắc muốn ngừng đơn hàng này không?", () -> {
+                    viewModel.updateOrderStatus(order.getId(), "finished");
+                });
+            }
         });
     }
     private void actionStep2(){

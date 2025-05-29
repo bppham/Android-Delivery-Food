@@ -164,7 +164,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
+                            android:layout_margin="5dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -174,7 +174,7 @@
                                 android:layout_height="35dp"
                                 android:layout_margin="8dp"
                                 android:background="@drawable/btn_next_status"
-                                android:padding="5dp"
+                                android:padding="4dp"
                                 android:text="Tiếp tục"
                                 android:textColor="@android:color/white"
                                 android:textSize="12sp"
@@ -199,6 +199,18 @@
                                     android:layout_marginRight="10dp"/>
 
                                 <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btnShowDirectionStep1"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    app:icon="@drawable/ic_map"
+                                    app:iconTint="@color/main_color"
+                                    android:backgroundTint="#EDE9E9"
+                                    android:contentDescription="Add"
+                                    android:padding="8dp"
+                                    android:layout_marginRight="10dp"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
+
+                                <com.google.android.material.button.MaterialButton
                                     android:id="@+id/btnDetailOrderStep1"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
@@ -207,15 +219,16 @@
                                     android:padding="8dp"
                                     app:icon="@drawable/ic_info"
                                     app:iconTint="@color/black"
-                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent"
-                                    android:layout_marginRight="10dp"/>
+                                    android:layout_marginRight="10dp"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
+
 
                                 <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btnShowDirectionStep1"
+                                    android:id="@+id/btnCancelDeliveringOrder"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    app:icon="@drawable/ic_map"
-                                    app:iconTint="@color/main_color"
+                                    app:icon="@drawable/ic_cancel"
+                                    app:iconTint="@color/red"
                                     android:backgroundTint="#EDE9E9"
                                     android:contentDescription="Add"
                                     android:padding="8dp"
@@ -418,18 +431,6 @@
                                     android:layout_marginRight="10dp"/>
 
                                 <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btnDetailOrderStep2"
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:backgroundTint="#EDE9E9"
-                                    android:contentDescription="Add"
-                                    android:padding="8dp"
-                                    app:icon="@drawable/ic_info"
-                                    app:iconTint="@color/black"
-                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent"
-                                    android:layout_marginRight="10dp"/>
-
-                                <com.google.android.material.button.MaterialButton
                                     android:id="@+id/btnShowDirectionStep2"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
@@ -438,7 +439,20 @@
                                     android:backgroundTint="#EDE9E9"
                                     android:contentDescription="Add"
                                     android:padding="8dp"
+                                    android:layout_marginRight="10dp"
                                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btnDetailOrderStep2"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:backgroundTint="#EDE9E9"
+                                    android:contentDescription="Add"
+                                    android:padding="8dp"
+                                    app:icon="@drawable/ic_info"
+                                    app:iconTint="@color/black"
+                                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.SmallComponent" />
+
 
                             </LinearLayout>
 
